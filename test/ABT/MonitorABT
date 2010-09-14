@@ -156,4 +156,4 @@ fi
 # Mail the report
 
 zip -r $SFCB_ROOT/$zipFile $SFCB_ROOT/"report$DATE"
-mutt -a $SFCB_ROOT/$zipFile -s "SFCB NBT: $STATUS: $TESTSUITE: $MID: $DISTRO: $DATE: ($testCount OK,$failureNo FAIL)" $MAIL_IDS < $SFCB_ROOT/$reportSummary
+mutt -s "SFCB NBT: $STATUS: $TESTSUITE: $MID: $DISTRO: $DATE: ($testCount OK,$failureNo FAIL)" $MAIL_IDS < $SFCB_ROOT/$reportSummary
