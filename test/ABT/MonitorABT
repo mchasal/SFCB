@@ -74,7 +74,6 @@ if [ $selfUpdateDone == "no" ]; then
     if $SFCBREPO_CMD 1>/dev/null 2>&1
     then
         RC=0
-        $SFCBREPO_CMD
         cd -
         cp $scriptDir/sfcb/test/ABT/* $scriptDir
         cp $scriptDir/MonitorABT $0
