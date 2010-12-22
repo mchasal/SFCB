@@ -19,6 +19,7 @@
  */
 #include "cimRequest.h"
 #include "native.h"
+#include "sfcUtil/utilft.h"
 #define _GNU_SOURCE
 #include <string.h>
 #include <dirent.h>
@@ -41,8 +42,28 @@
 #define RES_Quals                15
 #define RES_QuallsCollection     16
 
-int parseCimRsQueryParams(char* p) {
-  return 0;
+UtilHashTable *  parseCimRsQueryParams(char* p) {
+printf("MCS query %s\n", p);
+  //arg = strpbrk(path, "=")
+  char *qarg,*keyname,*saveptr, *saveptr2;
+  char *qkey, *qval;
+  //UtilHashTable      *hashTable;
+  //hashTable=newHashTableDefault(2);
+  UtilHashTable *ht = UtilFactory->newHashTable(20,UtilHashTable_ignoreKeyCase);
+  qarg=strtok_r(p,"&",&saveptr);
+
+  while(qarg)
+  {
+      printf("MCS arg %s ",qarg);
+      qkey=strtok_r(qarg,"=",&saveptr2);
+      qval=strtok_r(NULL,"=",&saveptr2);
+      printf("MCS key %s val %s\n",qkey,qval);
+      qarg=strtok_r(NULL,",",&saveptr);
+      ht->ft->put(ht,strdup(qkey),strdup(qval));
+      //HashTablePut(hashTable,qkey,qval);
+  }
+
+  return ht;
 }
 
 typedef struct _cimrsreq {
@@ -69,6 +90,7 @@ typedef struct _cimrsreq {
   char** sortedKeys;
   int keyCount;
   /* query stuff */
+  UtilHashTable * QueryHT;
 } CimRsReq;
 
 static int parseInstanceFragment(CimRsReq* req, char* fragment);
@@ -139,11 +161,12 @@ int parseCimRsPath(char* p, CimRsReq* req) {
     return -1;
   }
 
-  /* get the query string if there is one */
+  /* get  the query string if there is one */
+  printf ("MCS checking for query in %s\n",path);
   query = strpbrk(path, "?"); /* do we only need to check this for GET? */
   if (query != NULL) {
     *query = 0;
-    parseCimRsQueryParams(++query);
+    req->QueryHT=parseCimRsQueryParams(++query);
     fprintf(stderr, " has query\n");
   }
 
@@ -271,6 +294,8 @@ buildGetInstColl(CimRequestContext *ctx, CimRsReq *rsReq, RequestHdr *reqHdr)
 
   RequestHdr     *hdr = reqHdr;
   BinRequestContext *binCtx = hdr->binCtx;
+char * info = rsReq->QueryHT->ft->get(rsReq->QueryHT,"y");
+printf ("MCS get instcol x=%s\n",info);
 
   binCtx->oHdr = calloc(1, sizeof(OperationHdr));
   binCtx->oHdr->nameSpace=setCharsMsgSegment(rsReq->ns);
@@ -307,7 +332,6 @@ buildGetClassColl(CimRequestContext *ctx, CimRsReq *rsReq, RequestHdr *reqHdr)
 
   RequestHdr     *hdr = reqHdr;
   BinRequestContext *binCtx = hdr->binCtx;
-
   binCtx->oHdr = calloc(1, sizeof(OperationHdr));
   binCtx->oHdr->nameSpace=setCharsMsgSegment(rsReq->ns);
   binCtx->oHdr->className=setCharsMsgSegment(rsReq->cn);
