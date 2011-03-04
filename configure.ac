@@ -33,7 +33,7 @@ AM_CONFIG_HEADER([config.h])
 
 #Source files will use the local sfcCommon files if this is set.
 #Reverse this to use the shared sfcCommon library.
-AC_DEFINE(SFCCOMMON,1,[Local sfcCommon files used.])
+#AC_DEFINE(SFCCOMMON,1,[Local sfcCommon files used.])
 
 AC_ARG_ENABLE(debug,
 	[AC_HELP_STRING([--disable-debug],
@@ -425,6 +425,8 @@ fi
 AC_CHECK_LIB(pthread,main)
 AC_CHECK_LIB(dl,main)
 AC_CHECK_LIB(z,main,[SFCB_LIBZ=-lz],[AC_MSG_ERROR([Could not find required libz])])
+AC_CHECK_LIB(sfcUtil,main,,[AC_MSG_ERROR([Could not find required sfcUtil])])
+
 if test "$enable_indications" = "yes" ; then
    LOAD_INDICATION_PROVIDER=
    AC_DEFINE(HAVE_INDICATIONS,1,[Indication support enabled.])
