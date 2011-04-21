@@ -33,7 +33,9 @@
 #include "internalProvider.h"
 #include "cimRequest.h"
 #include "native.h"
+#include "control.h"
 
+//extern char     * sfcBrokerStart;
 extern void     closeProviderContext(BinRequestContext * ctx);
 extern int      exportIndication(char *url, char *payload, char **resp,
                                  char **msg);
@@ -265,7 +267,8 @@ IndCIMXMLHandlerCreateInstance(CMPIInstanceMI * mi,
 
   if (interOpNameSpace(cop, &st) == 0)
     _SFCB_RETURN(st);
-
+  
+  // Make sure instance doesn't exist
   internalProviderGetInstance(cop, &st);
   if (st.rc == CMPI_RC_ERR_FAILED)
     _SFCB_RETURN(st);
@@ -340,12 +343,47 @@ IndCIMXMLHandlerCreateInstance(CMPIInstanceMI * mi,
   }
   CMSetProperty(ciLocal, "persistencetype", &persistenceType, CMPI_uint16);
 
+  //MCS
+  //Set the SequenceContext for reliable indications
+  if (CMClassPathIsA(_broker, copLocal, "cim_listenerdestination", NULL)) {
+    //get the creation timestamp
+    struct timeval  tv;
+    struct timezone tz;
+    char   context[100];
+    gettimeofday(&tv, &tz);
+    struct tm cttm;
+    char * gtime = (char *) malloc(15 * sizeof(char));
+    memset(gtime, 0, 15 * sizeof(char));
+    if (gmtime_r(&tv.tv_sec, &cttm) != NULL) {
+      strftime(gtime, 15, "%Y%m%d%H%M%S", &cttm);
+    }
+
+    // Get the IndicationService name
+    CMPIObjectPath * isop = CMNewObjectPath(_broker, "root/interop", "CIM_IndicationService", NULL);
+    CMPIEnumeration * isenm = _broker->bft->enumerateInstances(_broker, ctx, isop, NULL, NULL);
+    CMPIData isinst = CMGetNext(isenm, NULL);
+    CMPIData mc = CMGetProperty(isinst.value.inst, "Name", NULL);
+
+    // build the context string
+    //sprintf (context,"%s#%s#%s",mc.value.string->ft->getCharPtr(mc.value.string,NULL),sfcBrokerStart,gtime);
+    sprintf (context,"%s#%s#",mc.value.string->ft->getCharPtr(mc.value.string,NULL),gtime);
+    //printf ("MCS:context=%s\n",context);
+    CMPIValue scontext;
+    scontext.string = sfcb_native_new_CMPIString(context, NULL, 0);
+
+    // set the properties
+    CMSetProperty(ciLocal, "SequenceContext", &scontext, CMPI_string);
+    CMPIValue zarro = {.sint64 = 0 };
+    CMSetProperty(ciLocal, "LastSequenceNumber", &zarro, CMPI_sint64);
+  }
+
   CMPIString     *str = CDToString(_broker, copLocal, NULL);
   CMPIString     *ns = CMGetNameSpace(copLocal, NULL);
   _SFCB_TRACE(1,
               ("--- handler %s %s", (char *) ns->hdl, (char *) str->hdl));
 
   in = CMNewArgs(_broker, NULL);
+printf("MCS adding handler\n");
   CMAddArg(in, "handler", &ciLocal, CMPI_instance);
   CMAddArg(in, "key", &copLocal, CMPI_ref);
   op = CMNewObjectPath(_broker, "root/interop",
@@ -464,6 +502,7 @@ deliverInd(const CMPIObjectPath * ref, const CMPIArgs * in)
 {
   _SFCB_ENTER(TRACE_INDPROVIDER, "deliverInd");
   CMPIInstance   *hci,
+                 *hdlr,
                  *ind;
   CMPIStatus      st = { CMPI_RC_OK, NULL };
   CMPIString     *dest;
@@ -481,6 +520,24 @@ deliverInd(const CMPIObjectPath * ref, const CMPIArgs * in)
   dest = CMGetProperty(hci, "destination", NULL).value.string;
   _SFCB_TRACE(1, ("--- destination: %s\n", (char *) dest->hdl));
   ind = CMGetArg(in, "indication", NULL).value.inst;
+  //hdlr = CMGetArg(in, "handler", NULL).value.inst;
+  int acnt=CMGetArgCount(in,NULL);
+  printf ("MCS argcount: %u\n",acnt);
+    CMPIString     *nm;
+    CMPIData        dt;
+    dt = CMGetArgAt(in, 1, &nm, NULL);
+    printf("MCS argname 1:%s\n",nm->ft->getCharPtr(nm,NULL));
+    dt = CMGetArgAt(in, 2, &nm, NULL);
+    printf("MCS argname 2:%s\n",nm->ft->getCharPtr(nm,NULL));
+    dt = CMGetArgAt(in, 0, &nm, NULL);
+    printf("MCS argname 0:%s\n",nm->ft->getCharPtr(nm,NULL));
+
+//MCS right here?
+  // Set the Sequence values
+  CMPIValue ten = {.sint64 = 10 };
+  CMSetProperty(ind, "SequenceNumber", &ten, CMPI_sint64);
+  //CMPIData sq = CMGetProperty(hdlr, "SequenceContext", NULL);
+  //CMSetProperty(ind, "SequenceContext", &sq.value, CMPI_string);
 
   sprintf(strId, "%d", id++);
   xs = exportIndicationReq(ind, strId);

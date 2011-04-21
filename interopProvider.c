@@ -894,6 +894,7 @@ InteropProviderGetInstance(CMPIInstanceMI * mi,
   if (st.rc == CMPI_RC_OK) {
 
     /* need to check IndicationSubscription, since it may contain props used internally by sfcb */
+    /* To get the filtered properties, use internalprovider GetInstance */
     if (strcasecmp(CMGetCharPtr(CMGetClassName(cop, NULL)), "cim_indicationsubscription") == 0) {
       filterInternalProps(ci);
     }
@@ -1319,6 +1320,8 @@ InteropProviderInvokeMethod(CMPIMethodMI * mi,
       if (fn_st.rc != CMPI_RC_OK) {
         _SFCB_TRACE(1,("--- %s: failed to add IndicationFilterName = %s rc=%d", __FUNCTION__, filtername, fn_st.rc));
       }
+      //MCS add context here
+      fn_st = CMSetProperty(ind, "SequenceContext", filtername, CMPI_chars);
     }
     CMAddArg(hin, "indication", &ind, CMPI_instance);
     CMRelease(ind);
@@ -1334,6 +1337,8 @@ InteropProviderInvokeMethod(CMPIMethodMI * mi,
         if ((void *) su->fi == filterId) {
           CMPIString     *str = CDToString(_broker, su->ha->hop, NULL);
           CMPIString     *ns = CMGetNameSpace(su->ha->hop, NULL);
+//MCS add here?
+          
           _SFCB_TRACE(1,
                       ("--- invoke handler %s %s", (char *) ns->hdl,
                        (char *) str->hdl));
