@@ -525,12 +525,12 @@ deliverInd(const CMPIObjectPath * ref, const CMPIArgs * in)
   printf ("MCS argcount: %u\n",acnt);
     CMPIString     *nm;
     CMPIData        dt;
-    dt = CMGetArgAt(in, 1, &nm, NULL);
-    printf("MCS argname 1:%s\n",nm->ft->getCharPtr(nm,NULL));
-    dt = CMGetArgAt(in, 2, &nm, NULL);
-    printf("MCS argname 2:%s\n",nm->ft->getCharPtr(nm,NULL));
-    dt = CMGetArgAt(in, 0, &nm, NULL);
-    printf("MCS argname 0:%s\n",nm->ft->getCharPtr(nm,NULL));
+    //dt = CMGetArgAt(in, 1, &nm, NULL);
+    //printf("MCS argname 1:%s\n",nm->ft->getCharPtr(nm,NULL));
+    //dt = CMGetArgAt(in, 2, &nm, NULL);
+    //printf("MCS argname 2:%s\n",nm->ft->getCharPtr(nm,NULL));
+    //dt = CMGetArgAt(in, 0, &nm, NULL);
+    //printf("MCS argname 0:%s\n",nm->ft->getCharPtr(nm,NULL));
 
 //MCS right here?
   // Set the Sequence values
