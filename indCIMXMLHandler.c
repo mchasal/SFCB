@@ -35,7 +35,6 @@
 #include "native.h"
 #include "control.h"
 
-//extern char     * sfcBrokerStart;
 extern void     closeProviderContext(BinRequestContext * ctx);
 extern int      exportIndication(char *url, char *payload, char **resp,
                                  char **msg);
@@ -267,8 +266,7 @@ IndCIMXMLHandlerCreateInstance(CMPIInstanceMI * mi,
 
   if (interOpNameSpace(cop, &st) == 0)
     _SFCB_RETURN(st);
-  
-  // Make sure instance doesn't exist
+
   internalProviderGetInstance(cop, &st);
   if (st.rc == CMPI_RC_ERR_FAILED)
     _SFCB_RETURN(st);
@@ -500,7 +498,7 @@ deliverInd(const CMPIObjectPath * ref, const CMPIArgs * in, CMPIContext * ctx)
                  *hdlr,
                  *sub,
                  *ind;
-  CMPIObjectPath *top, *iop;
+  CMPIObjectPath *hop, *iop;
   CMPIStatus      st = { CMPI_RC_OK, NULL };
   CMPIString     *dest;
   char            strId[64];
@@ -522,11 +520,10 @@ deliverInd(const CMPIObjectPath * ref, const CMPIArgs * in, CMPIContext * ctx)
   sub = CMGetArg(in, "subscription", NULL).value.inst;
   if (sub) {
     // Set the indication sequence values
-    // Check for null context
     handler=CMGetProperty(sub, "Handler", &st);
-    top=handler.value.ref;
+    hop=handler.value.ref;
     iop=ind->ft->getObjectPath(ind,NULL);
-    hdlr=CBGetInstance(_broker, ctxLocal, top, NULL, &st);
+    hdlr=CBGetInstance(_broker, ctxLocal, hop, NULL, &st);
     CMPIValue sfcbid = CMGetProperty(ind, "SFCB_IndicationID", &st).value;
     CMAddKey(iop,"SFCB_IndicationID",&sfcbid,CMPI_uint32);
     CMPIString *context = CMGetProperty(hdlr, "SequenceContext", &st).value.string;
@@ -538,7 +535,7 @@ deliverInd(const CMPIObjectPath * ref, const CMPIArgs * in, CMPIContext * ctx)
     lastseq = CMGetProperty(hdlr, "LastSequenceNumber", &st).value;
     CMSetProperty(ind, "SequenceNumber", &lastseq, CMPI_sint64);
     CMSetProperty(ind, "SequenceContext", &context, CMPI_string);
-    CBModifyInstance(_broker, ctxLocal, top, hdlr, NULL);
+    CBModifyInstance(_broker, ctxLocal, hop, hdlr, NULL);
     CBModifyInstance(_broker, ctxLocal, iop, ind, NULL);
   }
 

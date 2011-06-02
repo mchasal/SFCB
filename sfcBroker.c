@@ -48,8 +48,6 @@
 #endif
 
 int             sfcBrokerPid = 0;
-//char            * sfcBrokerStart = (char *) malloc(15 * sizeof(char));
-//extern char      * sfcBrokerStart;
 
 extern void     setExFlag(unsigned long f);
 extern char    *parseTarget(const char *target);
@@ -647,8 +645,7 @@ main(int argc, char *argv[])
   mlogf(M_INFO, M_SHOW, "--- %s V" sfcHttpDaemonVersion " started - %d\n",
         name, currentProc);
 
-  //MCS 
-  //get the creation timestamp
+  //get the creation timestamp for the sequence context
   struct timeval  tv;
   struct timezone tz;
   gettimeofday(&tv, &tz);
@@ -658,8 +655,6 @@ main(int argc, char *argv[])
   if (gmtime_r(&tv.tv_sec, &cttm) != NULL) {
     strftime(sfcBrokerStart, 15, "%Y%m%d%H%M%S", &cttm);
   }
-printf("MCS starttime: %s\n",sfcBrokerStart);
-
 
   if (collectStat) {
     mlogf(M_INFO, M_SHOW, "--- Statistics collection enabled\n");
