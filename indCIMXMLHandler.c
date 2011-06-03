@@ -526,15 +526,28 @@ deliverInd(const CMPIObjectPath * ref, const CMPIArgs * in, CMPIContext * ctx)
     hdlr=CBGetInstance(_broker, ctxLocal, hop, NULL, &st);
     CMPIValue sfcbid = CMGetProperty(ind, "SFCB_IndicationID", &st).value;
     CMAddKey(iop,"SFCB_IndicationID",&sfcbid,CMPI_uint32);
+
+    // Build the complete context
+    // Get the stub from the handler
     CMPIString *context = CMGetProperty(hdlr, "SequenceContext", &st).value.string;
+    // and add the sfcb start time
+    char *cstr=malloc( (strlen(context->ft->getCharPtr(context,NULL)) + strlen(sfcBrokerStart)) * sizeof(char));
+    sprintf(cstr,"%s%s",context->ft->getCharPtr(context,NULL),sfcBrokerStart);
+    context = sfcb_native_new_CMPIString(cstr, NULL, 0); 
+    // and put it in the indication
+    CMSetProperty(ind, "SequenceContext", &context, CMPI_string);
+    free(cstr);
+
+    // Get the proper sequence number
     CMPIValue lastseq = CMGetProperty(hdlr, "LastSequenceNumber", &st).value;
     lastseq.sint64++;
     // Handle wrapping of the signed int
     if (lastseq.sint64 < 0) lastseq.sint64=1;
+    // Update the last used number in the handler
     CMSetProperty(hdlr, "LastSequenceNumber", &lastseq.sint64, CMPI_sint64);
-    lastseq = CMGetProperty(hdlr, "LastSequenceNumber", &st).value;
+    // And the indication
     CMSetProperty(ind, "SequenceNumber", &lastseq, CMPI_sint64);
-    CMSetProperty(ind, "SequenceContext", &context, CMPI_string);
+
     CBModifyInstance(_broker, ctxLocal, hop, hdlr, NULL);
     CBModifyInstance(_broker, ctxLocal, iop, ind, NULL);
   }
