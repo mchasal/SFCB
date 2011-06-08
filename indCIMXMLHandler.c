@@ -364,6 +364,7 @@ IndCIMXMLHandlerCreateInstance(CMPIInstanceMI * mi,
     sprintf (context,"%s#%s#",mc.value.string->ft->getCharPtr(mc.value.string,NULL),gtime);
     CMPIValue scontext;
     scontext.string = sfcb_native_new_CMPIString(context, NULL, 0);
+    free(gtime);
 
     // set the properties
     CMSetProperty(ciLocal, "SequenceContext", &scontext, CMPI_string);

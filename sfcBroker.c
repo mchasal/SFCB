@@ -214,6 +214,7 @@ stopBroker(void *p)
   sunsetControl();
   // uninitGarbageCollector();
   closeLogging();
+  free((void *)sfcBrokerStart);
 
   if (restartBroker) {
     char           *emsg = strerror(errno);
@@ -651,9 +652,9 @@ main(int argc, char *argv[])
   gettimeofday(&tv, &tz);
   struct tm cttm;
   sfcBrokerStart = (char *) malloc(15 * sizeof(char));
-  memset(sfcBrokerStart, 0, 15 * sizeof(char));
+  memset((void *)sfcBrokerStart, 0, 15 * sizeof(char));
   if (gmtime_r(&tv.tv_sec, &cttm) != NULL) {
-    strftime(sfcBrokerStart, 15, "%Y%m%d%H%M%S", &cttm);
+    strftime((char *)sfcBrokerStart, 15, "%Y%m%d%H%M%S", &cttm);
   }
 
   if (collectStat) {
