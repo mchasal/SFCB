@@ -112,6 +112,7 @@ Klaus Kampf, Novell
 05/24/2010 [ 2994737 ] cimslp fails to get sslCertificateFilePath config value
 05/27/2010 [ 2984485 ] Possible access to freed memory in cimslpSLP.c
 06/30/2010 [ 2968599 ] Wrong trace msg for invokeMethod (local interface)
+06/09/2011 [ 3047562 ] [patch] Create bzip2 tarballs on "make dist"
 
 Mike Brasher, Inova
 -------------------
@@ -183,7 +184,10 @@ Chris Poblete, Dell
 11/10/2010 [ 3101154 ] Daemon clients failed SfcbLocal connect due to permission
 03/09/2011 [ 3202420 ] CDATA value in a string property is improperly XML escaped
 04/28/2011 [ 3202466 ] Single item on method param of array type rejected via Local
+06/09/2011 [ 3314383 ] Memory leak in CimResource_Enumerate_EP
+06/10/2011 [ 3314762 ] Memory leak in method invoke using SFCB local interface
 
 Josef Moellers
 --------------
 11/17/2010 [ 3109469 ] Potential Buffer Overflow in msgqueue.c:localConnectServer()
+06/10/2011 [ 3165732 ] Add ability for client library to specify configuration file

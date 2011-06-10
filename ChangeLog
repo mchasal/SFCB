@@ -1,3 +1,23 @@
+2011-06-10  Chris Buccella  <buccella@linux.vnet.ibm.com>
+
+	* cimcClientSfcbLocal.c:
+	[ 3314762 ] Memory leak in method invoke using SFCB local interface
+	(patch by Chris Poblete)
+
+	* control.c:
+	[ 3165732 ] Add ability for client library to specify configuration file
+	(patch by Josef Moellers)
+
+2011-06-09  Chris Buccella  <buccella@linux.vnet.ibm.com>
+
+	* control.c, cimcClientSfcbLocal.c:
+	[ 3314383 ] Memory leak in CimResource_Enumerate_EP
+	(patch by Chris Poblete)
+
+	* Makefile.am
+	[ 3047562 ] [patch] Create bzip2 tarballs on "make dist"
+	(patch by Klaus Kampf)
+	
 2011-06-01  Chris Buccella  <buccella@linux.vnet.ibm.com>
 
 	* interopServerProvider.c:

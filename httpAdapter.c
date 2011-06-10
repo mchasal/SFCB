@@ -228,6 +228,10 @@ remProcCtl()
   return 0;
 }
 
+/*                                                                                                                                                                                                                
+ * Call the authentication library
+ * Return 1 on success, 0 on fail, -1 on expired
+ */
 int
 baValidate(char *cred, char **principal)
 {
@@ -274,7 +278,6 @@ baValidate(char *cred, char **principal)
   }
 
   free(auth);
-  fprintf(stderr, "baValidate: returning %d\n", ret);
   return ret;
 }
 
@@ -842,6 +845,8 @@ doHttpRequest(CommHndl conn_fd)
                   ev;
   CimRequestContext ctx;
   int             breakloop;
+  int             hcrFlags = 0;  /* flags to pass to handleCimRequest() */
+
   _SFCB_ENTER(TRACE_HTTPDAEMON, "doHttpRequest");
 
   if (pauseCodec("http"))
@@ -985,6 +990,11 @@ doHttpRequest(CommHndl conn_fd)
         discardInput = 2;
       }
     }
+#ifdef ALLOW_UPDATE_EXPIRED_PW
+    else if (strncasecmp(hdr, "Pragma: UpdateExpiredPassword", 29) == 0) {
+      hcrFlags |= HCR_UPDATE_PW;
+    }
+#endif
   }
 
 #if defined USE_SSL
@@ -1012,6 +1022,7 @@ doHttpRequest(CommHndl conn_fd)
 #endif
 
   int             authorized = 0;
+  int             barc = 0;
 #ifdef HAVE_UDS
   if (!discardInput && doUdsAuth) {
     struct sockaddr_un sun;
@@ -1028,17 +1039,29 @@ doHttpRequest(CommHndl conn_fd)
   }
 #endif
   if (!authorized && !discardInput && doBa) {
-    if (inBuf.authorization && 
-        (baValidate(inBuf.authorization,&inBuf.principal) != AUTH_PASS)) {
-      char            more[] =
+    if (inBuf.authorization) {
+      barc = baValidate(inBuf.authorization,&inBuf.principal);
+#ifdef ALLOW_UPDATE_EXPIRED_PW
+      if (barc == AUTH_EXPIRED) {
+	hcrFlags |= HCR_EXPIRED_PW;
+      }
+      else if (barc == AUTH_PASS) {
+	hcrFlags = 0; /* clear flags so non-expired user doesn't update pw */
+      }
+      else if (barc == AUTH_FAIL) {
+#else
+      if (barc != AUTH_PASS) {
+#endif
+	char            more[] =
           "WWW-Authenticate: Basic realm=\"cimom\"\r\n";
-      genError(conn_fd, &inBuf, 401, "Unauthorized", more);
-      /*
-       * we continue to parse headers and empty the socket to be graceful
-       * with the client 
-       */
-      discardInput = 1;
-    }
+	genError(conn_fd, &inBuf, 401, "Unauthorized", more);
+	/*
+	 * we continue to parse headers and empty the socket to be graceful
+	 * with the client 
+	 */
+	discardInput = 1;
+      }
+  }
 #if defined USE_SSL
     else if (sfcbSSLMode && ccVerifyMode != CC_VERIFY_IGNORE) {
       /*
@@ -1115,7 +1138,7 @@ doHttpRequest(CommHndl conn_fd)
     }
 #endif
 
-    response = handleCimRequest(&ctx);
+    response = handleCimRequest(&ctx, hcrFlags);
   } else {
     response = nullResponse;
   }

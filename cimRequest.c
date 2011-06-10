@@ -327,6 +327,27 @@ methodErrResponse(RequestHdr * hdr, char *error)
   return rs;
 };
 
+#ifdef ALLOW_UPDATE_EXPIRED_PW
+
+static char    *
+getErrExpiredSegment()
+{
+  char* msg = sfcb_snprintf("<ERROR CODE=\"2\" \
+DESCRIPTION=\"User Account Expired\">\n\
+<INSTANCE CLASSNAME=\"CIM_Error\">\n\
+<PROPERTY NAME=\"ErrorType\" TYPE=\"uint16\">\
+<VALUE>1</VALUE></PROPERTY>\n\
+<PROPERTY NAME=\"OtherErrorType\" TYPE=\"string\">\
+<VALUE>Password Expired</VALUE></PROPERTY>\n\
+<PROPERTY NAME=\"ProbableCause\" TYPE=\"uint16\">\
+<VALUE>117</VALUE></PROPERTY>\n\
+</INSTANCE>\n</ERROR>\n");
+
+  return msg;
+}
+
+#endif /* ALLOW_UPDATE_EXPIRED_PW */
+
 static          RespSegments
 ctxErrResponse(RequestHdr * hdr, BinRequestContext * ctx, int meth)
 {
@@ -1707,6 +1728,23 @@ static Handler  handlers[] = {
   {invokeMethod},               // OPS_InvokeMethod 24
 };
 
+RespSegments sendHdrToHandler(RequestHdr* hdr, CimRequestContext* ctx) {
+
+  RespSegments    rs;
+  Handler         hdlr;
+  HeapControl    *hc;
+
+  hc = markHeap();
+  hdlr = handlers[hdr->opType];
+  rs = hdlr.handler(ctx, hdr);
+  releaseHeap(hc);
+
+  ctx->className = hdr->className;
+  ctx->operation = hdr->opType;
+
+  return rs;
+}
+
 static Scanner scanners[] = {
 #ifdef HANDLER_CIMRS
   {scanCimRsRequest},
@@ -1719,12 +1757,10 @@ static Scanner scanners[] = {
 static int scanner_count = sizeof(scanners) / sizeof(Scanner);
 
 RespSegments
-handleCimRequest(CimRequestContext * ctx)
+handleCimRequest(CimRequestContext * ctx, int flags)
 {
   RespSegments    rs;
   RequestHdr      hdr;
-  Handler         hdlr;
-  HeapControl    *hc;
 #ifdef SFCB_DEBUG
   struct rusage   us,
                   ue;
@@ -1779,7 +1815,6 @@ handleCimRequest(CimRequestContext * ctx)
                  timevalDiff(&us.ru_stime, &ue.ru_stime)));
     }
 #endif
-
     if (hdr.rc) {
       if (hdr.methodCall) {
         rs = methodErrResponse(&hdr, getErrSegment(CMPI_RC_ERR_FAILED,
@@ -1790,15 +1825,27 @@ handleCimRequest(CimRequestContext * ctx)
                                                   hdr.errMsg));
 //      rs = iMethodErrResponse(&hdr, getErrSegment(CMPI_RC_ERR_FAILED,
 //                                                  "invalid imethodcall XML"));
+      }
+    } 
+#ifdef ALLOW_UPDATE_EXPIRED_PW
+    else if (flags) {
+      /* request from user with an expired password AND requesting password update */
+      if (flags == (HCR_UPDATE_PW | HCR_EXPIRED_PW) &&
+          (strcasecmp(hdr.className, "SFCB_Account") == 0) && hdr.methodCall) {
+	rs = sendHdrToHandler(&hdr, ctx);
+      }
+      else {    /* expired user tried to invoke non-UpdatePassword request */
+	if (hdr.methodCall) { 
+	  rs = methodErrResponse(&hdr, getErrExpiredSegment());
+	} else {
+	  rs = iMethodErrResponse(&hdr, getErrExpiredSegment());
+	}
+      }
     }
-    } else {
-      hc = markHeap();
-      hdlr = handlers[hdr.opType];
-      rs = hdlr.handler(ctx, &hdr);
-      releaseHeap(hc);
+#endif  /* ALLOW_UPDATE_EXPIRED_PW */
 
-      ctx->className = hdr.className;
-      ctx->operation = hdr.opType;
+    else {
+      rs = sendHdrToHandler(&hdr, ctx);
     }
     rs.buffer = hdr.buffer;
     rs.rc=0;
