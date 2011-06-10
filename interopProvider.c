@@ -1320,8 +1320,6 @@ InteropProviderInvokeMethod(CMPIMethodMI * mi,
       if (fn_st.rc != CMPI_RC_OK) {
         _SFCB_TRACE(1,("--- %s: failed to add IndicationFilterName = %s rc=%d", __FUNCTION__, filtername, fn_st.rc));
       }
-      //MCS This shouldn't be needed, but it breaks???
-      fn_st = CMSetProperty(ind, "SequenceContext", filtername, CMPI_chars);
     }
     CMAddArg(hin, "indication", &ind, CMPI_instance);
     CMRelease(ind);
