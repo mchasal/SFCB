@@ -318,7 +318,7 @@ i=1
 f=0
 while [ $i -lt $((lim+1)) ]
 do
-    grep -A1 SequenceNumber /tmp/save | grep '<VALUE>'$i'</VALUE>' > /dev/null 2>&1
+    grep -A1 SequenceNumber $ODIR/SFCB_Listener.txt | grep '<VALUE>'$i'</VALUE>' > /dev/null 2>&1
     if [ $? -eq 0 ]
     then
         i=$((i+1))

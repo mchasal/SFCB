@@ -34,6 +34,7 @@
 #include "cimRequest.h"
 #include "native.h"
 #include "control.h"
+#include "instance.h"
 
 extern void     closeProviderContext(BinRequestContext * ctx);
 extern int      exportIndication(char *url, char *payload, char **resp,
@@ -235,6 +236,57 @@ IndCIMXMLHandlerEnumInstances(CMPIInstanceMI * mi,
   _SFCB_RETURN(st);
 }
 
+const char    **
+getKeyList(const CMPIObjectPath * cop)
+{
+  CMPIString     *s;
+  const char    **list;
+  int             i = cop->ft->getKeyCount(cop, NULL);
+  list = malloc((i + 1) * sizeof(char *));
+  list[i] = NULL;
+  while (i) {
+    i--;
+    cop->ft->getKeyAt(cop, i, &s, NULL);
+    list[i] = s->ft->getCharPtr(s, NULL);
+  }
+  return list;
+}
+
+void
+filterInternalProps(CMPIInstance* ci) 
+{
+
+  CMPIStatus      pst = { CMPI_RC_OK, NULL };
+  CMGetProperty(ci, "LastSequenceNumber", &pst);
+  /* prop is set, need to clear it out */
+  if (pst.rc != CMPI_RC_ERR_NOT_FOUND) {
+    filterFlagProperty(ci, "LastSequenceNumber");
+  }
+  CMGetProperty(ci, "SequenceContext", &pst);
+  /* prop is set, need to clear it out */
+  if (pst.rc != CMPI_RC_ERR_NOT_FOUND) {
+    filterFlagProperty(ci, "SequenceContext");
+  }
+
+  return;
+}
+extern int      isChild(const char *ns, const char *parent,
+                        const char *child);
+  
+static int
+isa(const char *sns, const char *child, const char *parent)
+{
+  int             rv;
+  _SFCB_ENTER(TRACE_INDPROVIDER, "isa");
+    
+  if (strcasecmp(child, parent) == 0)
+    return 1;
+  rv = isChild(sns, parent, child);
+  _SFCB_RETURN(rv);
+}
+
+
+
 CMPIStatus
 IndCIMXMLHandlerGetInstance(CMPIInstanceMI * mi,
                             const CMPIContext *ctx,
@@ -243,8 +295,26 @@ IndCIMXMLHandlerGetInstance(CMPIInstanceMI * mi,
                             const char **properties)
 {
   CMPIStatus      st;
+  CMPIInstance*   ci;
+  const char** keyList;
   _SFCB_ENTER(TRACE_INDPROVIDER, "IndCIMXMLHandlerGetInstance");
-  st = InternalProviderGetInstance(NULL, ctx, rslt, cop, properties);
+  
+  ci = internalProviderGetInstance(cop, &st);
+
+  if (st.rc == CMPI_RC_OK) {
+    if (isa("root/interop", CMGetCharPtr(CMGetClassName(cop,NULL)), "cim_indicationhandler")) {
+      filterInternalProps(ci);
+    }
+    if (properties) {
+      keyList = getKeyList(ci->ft->getObjectPath(ci, NULL));
+      ci->ft->setPropertyFilter(ci, properties, keyList);
+      if (keyList) {
+        free(keyList);
+      }
+    }
+    CMReturnInstance(rslt, ci);
+  }
+
   _SFCB_RETURN(st);
 }
 
