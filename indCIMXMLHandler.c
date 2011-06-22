@@ -175,6 +175,7 @@ IndCIMXMLHandlerEnumInstances(CMPIInstanceMI * mi,
   CMPIStatus      st;
   CMPIEnumeration *enm;
   CMPIContext    *ctxLocal;
+  CMPIInstance*   ci;
 
   _SFCB_ENTER(TRACE_INDPROVIDER, "IndCIMXMLHandlerEnumInstances");
   if (interOpNameSpace(ref, &st) != 1)
@@ -191,7 +192,9 @@ IndCIMXMLHandlerEnumInstances(CMPIInstanceMI * mi,
         _broker->bft->enumerateInstances(_broker, ctxLocal, ref,
                                          properties, &st);
     while (enm && enm->ft->hasNext(enm, &st)) {
-      CMReturnInstance(rslt, (enm->ft->getNext(enm, &st)).value.inst);
+      ci=(enm->ft->getNext(enm, &st)).value.inst;
+      filterInternalProps(ci);
+      CMReturnInstance(rslt, ci);
     }
     refLocal =
         CMNewObjectPath(_broker, "root/interop",
@@ -200,7 +203,9 @@ IndCIMXMLHandlerEnumInstances(CMPIInstanceMI * mi,
         _broker->bft->enumerateInstances(_broker, ctxLocal, refLocal,
                                          properties, &st);
     while (enm && enm->ft->hasNext(enm, &st)) {
-      CMReturnInstance(rslt, (enm->ft->getNext(enm, &st)).value.inst);
+      ci=(enm->ft->getNext(enm, &st)).value.inst;
+      filterInternalProps(ci);
+      CMReturnInstance(rslt, ci);
     }
     refLocal =
         CMNewObjectPath(_broker, "root/interop",
@@ -209,7 +214,9 @@ IndCIMXMLHandlerEnumInstances(CMPIInstanceMI * mi,
         _broker->bft->enumerateInstances(_broker, ctxLocal, refLocal,
                                          properties, &st);
     while (enm && enm->ft->hasNext(enm, &st)) {
-      CMReturnInstance(rslt, (enm->ft->getNext(enm, &st)).value.inst);
+      ci=(enm->ft->getNext(enm, &st)).value.inst;
+      filterInternalProps(ci);
+      CMReturnInstance(rslt, ci);
     }
     CMRelease(refLocal);
   } else {
@@ -217,7 +224,9 @@ IndCIMXMLHandlerEnumInstances(CMPIInstanceMI * mi,
         _broker->bft->enumerateInstances(_broker, ctxLocal, ref,
                                          properties, &st);
     while (enm && enm->ft->hasNext(enm, &st)) {
-      CMReturnInstance(rslt, (enm->ft->getNext(enm, &st)).value.inst);
+      ci=(enm->ft->getNext(enm, &st)).value.inst;
+      filterInternalProps(ci);
+      CMReturnInstance(rslt, ci);
     }
   }
 #else
@@ -225,13 +234,16 @@ IndCIMXMLHandlerEnumInstances(CMPIInstanceMI * mi,
       _broker->bft->enumerateInstances(_broker, ctxLocal, ref, properties,
                                        &st);
   while (enm && enm->ft->hasNext(enm, &st)) {
-    CMReturnInstance(rslt, (enm->ft->getNext(enm, &st)).value.inst);
+      ci=(enm->ft->getNext(enm, &st)).value.inst;
+      filterInternalProps(ci);
+      CMReturnInstance(rslt, ci);
   }
 #endif
 
   CMRelease(ctxLocal);
   if (enm)
     CMRelease(enm);
+  if (ci) CMRelease(ci);
 
   _SFCB_RETURN(st);
 }
