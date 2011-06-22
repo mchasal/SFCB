@@ -109,7 +109,7 @@ IndCIMXMLHandlerEnumInstanceNames(CMPIInstanceMI * mi,
   CMPIContext    *ctxLocal;
 
   _SFCB_ENTER(TRACE_INDPROVIDER, "IndCIMXMLHandlerEnumInstanceNames");
-  if (interOpNameSpace(ref, NULL) != 1)
+  if (interOpNameSpace(ref, &st) != 1)
     _SFCB_RETURN(st);
   ctxLocal = prepareUpcall((CMPIContext *) ctx);
 
@@ -177,7 +177,7 @@ IndCIMXMLHandlerEnumInstances(CMPIInstanceMI * mi,
   CMPIContext    *ctxLocal;
 
   _SFCB_ENTER(TRACE_INDPROVIDER, "IndCIMXMLHandlerEnumInstances");
-  if (interOpNameSpace(ref, NULL) != 1)
+  if (interOpNameSpace(ref, &st) != 1)
     _SFCB_RETURN(st);
   ctxLocal = prepareUpcall((CMPIContext *) ctx);
 
