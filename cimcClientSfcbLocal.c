@@ -98,7 +98,7 @@ set_debug()
   if (firsttime == 1) {
     firsttime--;
     do_debug = ((dbg = getenv("CMPISFCC_DEBUG")) != NULL &&
-                strcasecmp(dbg, "true") == 0);
+                _SFCB_STRCASECMP(dbg, "true") == 0);
   }
 }
 #endif
@@ -1267,9 +1267,9 @@ static CMPIValue convertFromStringValue(CMPIValue strcval,
     newcval.sint8 = (CMPISint8) strtol(sval, &scheck, 0);
     break;
   case CMPI_boolean:
-    if ((strcasecmp(sval, "false") == 0))  {
+    if ((_SFCB_STRCASECMP(sval, "false") == 0))  {
       newcval.boolean = 0; 
-    } else if ((strcasecmp(sval, "true") == 0)) {
+    } else if ((_SFCB_STRCASECMP(sval, "true") == 0)) {
       newcval.boolean = 1;
     } else {
       scheck = sval; // set failure case
@@ -1345,7 +1345,7 @@ static CMPIArgs * convertFromStringArguments(CMPIConstClass *cls,
   for (jj = 0, mm = ClClassGetMethodCount(cl); jj < mm; jj++) {
     ClClassGetMethodAt(cl, jj, NULL, &mname, NULL);
     _SFCB_TRACE(4,("--- index: %u name: %s", jj, mname));
-    if (strcasecmp(method, mname) == 0) {
+    if (_SFCB_STRCASECMP(method, mname) == 0) {
       break;
     }
   }
@@ -1374,7 +1374,7 @@ static CMPIArgs * convertFromStringArguments(CMPIConstClass *cls,
     for (pp = 0, pm = ClClassGetMethParameterCount(cl, jj); pp < pm; pp++) {
       ClClassGetMethParameterAt(cl, meth, pp, &cparam, &sname);
       _SFCB_TRACE(4,("--- class cparam: %s",sname)); 
-      if (strcasecmp(sname, (char*)name->hdl) == 0) {
+      if (_SFCB_STRCASECMP(sname, (char*)name->hdl) == 0) {
         _SFCB_TRACE(4,("--- match found: %s at index: %u",(char*)name->hdl,pp)); 
         break;
       }

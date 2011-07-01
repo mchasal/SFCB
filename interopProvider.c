@@ -93,7 +93,7 @@ static int
 interOpNameSpace(const CMPIObjectPath * cop, CMPIStatus *st)
 {
   char           *ns = (char *) CMGetNameSpace(cop, NULL)->hdl;
-  if (strcasecmp(ns, "root/interop") && strcasecmp(ns, "root/pg_interop")) {
+  if (_SFCB_STRCASECMP(ns, "root/interop") && strcasecmp(ns, "root/pg_interop")) {
     if (st)
       setStatus(st, CMPI_RC_ERR_FAILED,
                 "Object must reside in root/interop");
@@ -369,7 +369,7 @@ isa(const char *sns, const char *child, const char *parent)
   int             rv;
   _SFCB_ENTER(TRACE_INDPROVIDER, "isa");
 
-  if (strcasecmp(child, parent) == 0)
+  if (_SFCB_STRCASECMP(child, parent) == 0)
     return 1;
   rv = isChild(sns, parent, child);
   _SFCB_RETURN(rv);
@@ -860,7 +860,7 @@ InteropProviderEnumInstances(CMPIInstanceMI * mi,
 
     /* need to check IndicationSubscription, since it may contain props used internally by sfcb */
     CMPIObjectPath* cop = CMGetObjectPath(ci, &st);
-    if (strcasecmp(CMGetCharPtr(CMGetClassName(cop, NULL)), "cim_indicationsubscription") == 0) {
+    if (_SFCB_STRCASECMP(CMGetCharPtr(CMGetClassName(cop, NULL)), "cim_indicationsubscription") == 0) {
       filterInternalProps(ci);
     }
 
@@ -895,7 +895,7 @@ InteropProviderGetInstance(CMPIInstanceMI * mi,
 
     /* need to check IndicationSubscription, since it may contain props used internally by sfcb */
     /* To get the filtered properties, use internalprovider GetInstance */
-    if (strcasecmp(CMGetCharPtr(CMGetClassName(cop, NULL)), "cim_indicationsubscription") == 0) {
+    if (_SFCB_STRCASECMP(CMGetCharPtr(CMGetClassName(cop, NULL)), "cim_indicationsubscription") == 0) {
       filterInternalProps(ci);
     }
 
@@ -1059,8 +1059,8 @@ InteropProviderCreateInstance(CMPIInstanceMI * mi,
     lng[n] = 0;
 
     _SFCB_TRACE(2, ("--- CIM query language %s %s", lang->hdl, lng));
-    if (strcasecmp(lng, "wql") && strcasecmp(lng, "cql")
-        && strcasecmp(lng, "cim:cql")) {
+    if (_SFCB_STRCASECMP(lng, "wql") && strcasecmp(lng, "cql")
+        && _SFCB_STRCASECMP(lng, "cim:cql")) {
       setStatus(&st, CMPI_RC_ERR_QUERY_LANGUAGE_NOT_SUPPORTED, NULL);
       _SFCB_RETURN(st);
     }
@@ -1292,7 +1292,7 @@ InteropProviderInvokeMethod(CMPIMethodMI * mi,
 
   _SFCB_TRACE(1, ("--- Method: %s", methodName));
 
-  if (strcasecmp(methodName, "_deliver") == 0) {
+  if (_SFCB_STRCASECMP(methodName, "_deliver") == 0) {
     HashTableIterator *i;
     Subscription   *su;
     char           *suName;
@@ -1346,7 +1346,7 @@ InteropProviderInvokeMethod(CMPIMethodMI * mi,
       }
   }
 
-  else if (strcasecmp(methodName, "_addHandler") == 0) {
+  else if (_SFCB_STRCASECMP(methodName, "_addHandler") == 0) {
     CMPIInstance   *ci = in->ft->getArg(in, "handler", &st).value.inst;
     CMPIObjectPath *op = in->ft->getArg(in, "key", &st).value.ref;
     CMPIString     *str = CDToString(_broker, op, NULL);
@@ -1357,7 +1357,7 @@ InteropProviderInvokeMethod(CMPIMethodMI * mi,
     addHandler(ci, op);
   }
 
-  else if (strcasecmp(methodName, "_removeHandler") == 0) {
+  else if (_SFCB_STRCASECMP(methodName, "_removeHandler") == 0) {
     CMPIObjectPath *op = in->ft->getArg(in, "key", &st).value.ref;
     char           *key = normalizeObjectPathCharsDup(op);
     Handler        *ha = getHandler(key);
@@ -1373,7 +1373,7 @@ InteropProviderInvokeMethod(CMPIMethodMI * mi,
       free(key);
   }
 
-  else if (strcasecmp(methodName, "_startup") == 0) {
+  else if (_SFCB_STRCASECMP(methodName, "_startup") == 0) {
     initInterOp(_broker, ctx);
   }
 

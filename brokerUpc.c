@@ -409,7 +409,7 @@ genericEnumRequest(const CMPIBroker * broker,
               char           *namespace =
                   CMGetCharPtr(CMGetNameSpace(cop, NULL));
               if (classname && namespace
-                  && strcasecmp(pInfo->className, classname)) {
+                  && _SFCB_STRCASECMP(pInfo->className, classname)) {
                 CMPIObjectPath *provPath =
                     CMNewObjectPath(broker, namespace, pInfo->className,
                                     NULL);

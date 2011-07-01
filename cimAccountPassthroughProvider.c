@@ -77,7 +77,7 @@ CimAccountPassthroughProviderInvokeMethod(CMPIMethodMI * mi,
   }
   const char* newPW = CMGetCharPtr(arg.value.string);
 
-  if (strcasecmp(methodName, "UpdateExpiredPassword") == 0) {
+  if (_SFCB_STRCASECMP(methodName, "UpdateExpiredPassword") == 0) {
 
     /* check to see if parameters were specified in providerRegister */
     CMPIStatus parm_st = { CMPI_RC_OK, NULL };
@@ -103,7 +103,7 @@ CimAccountPassthroughProviderInvokeMethod(CMPIMethodMI * mi,
     CMPIObjectPath *caOp = CMNewObjectPath(_broker, acct_ns, acct_cn, &st);
 
     /* if a simple strcmp works, don't bother with the isa */
-    if (strcasecmp(acct_cn, "cim_account")) { 
+    if (_SFCB_STRCASECMP(acct_cn, "cim_account")) { 
       if (!CMClassPathIsA(_broker, caOp, "cim_account", &st)) {
        setStatus(&st, CMPI_RC_ERR_NOT_FOUND, 
                        "Class specified for password update not a CIM_Account");

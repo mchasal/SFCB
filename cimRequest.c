@@ -1831,7 +1831,7 @@ handleCimRequest(CimRequestContext * ctx, int flags)
     else if (flags) {
       /* request from user with an expired password AND requesting password update */
       if (flags == (HCR_UPDATE_PW | HCR_EXPIRED_PW) &&
-          (strcasecmp(hdr.className, "SFCB_Account") == 0) && hdr.methodCall) {
+          (_SFCB_STRCASECMP(hdr.className, "SFCB_Account") == 0) && hdr.methodCall) {
 	rs = sendHdrToHandler(&hdr, ctx);
       }
       else {    /* expired user tried to invoke non-UpdatePassword request */

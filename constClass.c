@@ -195,7 +195,7 @@ getQualifier(CMPIConstClass * cc, const char *name, CMPIStatus *rc)
         CMSetStatus(rc, CMPI_RC_ERR_NOT_FOUND);
       return rv_notfound;
     }
-    if (strcasecmp(name, qname) == 0) {
+    if (_SFCB_STRCASECMP(name, qname) == 0) {
       if (rv.type == CMPI_chars) {
         rv.value.string = sfcb_native_new_CMPIString(ClObjectGetClString
                                                      (&cls->hdr,
@@ -319,7 +319,7 @@ getPropQualifier(CMPIConstClass * cc, const char *cp, const char *cpq,
   /*
    * special qualifier handling 
    */
-  if (strcasecmp(cpq, "key") == 0) {
+  if (_SFCB_STRCASECMP(cpq, "key") == 0) {
     unsigned long   quals;
     getPropertyQualsAt(cc, p - 1, NULL, &quals, NULL, rc);
     if (quals & ClProperty_Q_Key) {
@@ -335,7 +335,7 @@ getPropQualifier(CMPIConstClass * cc, const char *cp, const char *cpq,
       return rv_notFound;
     }
   }
-  if (strcasecmp(cpq, "embeddedobject") == 0) {
+  if (_SFCB_STRCASECMP(cpq, "embeddedobject") == 0) {
     unsigned long quals;
     getPropertyQualsAt(cc,p-1,NULL,&quals,NULL,rc);
     if (quals &  ClProperty_Q_EmbeddedObject) {
@@ -354,7 +354,7 @@ getPropQualifier(CMPIConstClass * cc, const char *cp, const char *cpq,
 
   for (i = 0; i < num; i++) {
     if (ClClassGetPropQualifierAt(cls, p - 1, i, &rv, &n) == 0
-        && strcasecmp(cpq, n) == 0) {
+        && _SFCB_STRCASECMP(cpq, n) == 0) {
       if (rv.type == CMPI_chars) {
         rv.value.string = sfcb_native_new_CMPIString(ClObjectGetClString
                                                      (&cls->hdr,

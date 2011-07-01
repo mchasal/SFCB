@@ -1586,13 +1586,13 @@ initSSL()
   _SFCB_TRACE(1, ("---  sslClientCertificate = %s", fnl));
   getControlChars("sslCertList", &fcert);
   load_cert(fcert);
-  if (strcasecmp(fnl, "ignore") == 0) {
+  if (_SFCB_STRCASECMP(fnl, "ignore") == 0) {
     ccVerifyMode = CC_VERIFY_IGNORE;
     SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0);
-  } else if (strcasecmp(fnl, "accept") == 0) {
+  } else if (_SFCB_STRCASECMP(fnl, "accept") == 0) {
     ccVerifyMode = CC_VERIFY_ACCEPT;
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, get_cert);
-  } else if (strcasecmp(fnl, "require") == 0) {
+  } else if (_SFCB_STRCASECMP(fnl, "require") == 0) {
     ccVerifyMode = CC_VERIFY_REQUIRE;
     SSL_CTX_set_verify(ctx,
                        SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,

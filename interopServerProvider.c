@@ -662,15 +662,15 @@ ServiceProviderGetInstance(CMPIInstanceMI * mi,
   _SFCB_ENTER(TRACE_PROVIDERS, "ServiceProviderGetInstance");
 
   if (name && name->hdl) {
-    if (strcasecmp((char *) name->hdl, getSfcbUuid()) == 0) {
-      if (strcasecmp(className, "cim_objectmanager") == 0)
+    if (_SFCB_STRCASECMP((char *) name->hdl, getSfcbUuid()) == 0) {
+      if (_SFCB_STRCASECMP(className, "cim_objectmanager") == 0)
         return ObjectManagerProviderEnumInstances(mi, ctx, rslt, ref,
                                                   properties);
-      if (strcasecmp(className, "sfcb_cimxmlcommunicationMechanism")
+      if (_SFCB_STRCASECMP(className, "sfcb_cimxmlcommunicationMechanism")
           == 0)
         return ComMechProviderEnumInstances(mi, ctx, rslt, ref,
                                             properties);
-      if (strcasecmp(className, "cim_indicationservice") == 0)
+      if (_SFCB_STRCASECMP(className, "cim_indicationservice") == 0)
         return IndServiceProviderGetInstance(mi, ctx, rslt, ref,
                                              properties);
     }
@@ -703,18 +703,18 @@ ServerProviderGetInstance(CMPIInstanceMI * mi,
 {
   CMPIString     *cls = CMGetClassName(ref, NULL);
 
-  if (strcasecmp((char *) cls->hdl, "cim_namespace") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_namespace") == 0)
     return NameSpaceProviderGetInstance(mi, ctx, rslt, ref, properties, 0);
-  else if (strcasecmp((char *) cls->hdl, "__namespace") == 0)
+  else if (_SFCB_STRCASECMP((char *) cls->hdl, "__namespace") == 0)
     return NameSpaceProviderGetInstance(mi, ctx, rslt, ref, properties, 1);
-  if (strcasecmp((char *) cls->hdl, "cim_objectmanager") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_objectmanager") == 0)
     return ServiceProviderGetInstance(mi, ctx, rslt, ref, properties,
                                       "cim_objectmanager");
-  if (strcasecmp
+  if (_SFCB_STRCASECMP
       ((char *) cls->hdl, "sfcb_cimxmlcommunicationMechanism") == 0)
     return ServiceProviderGetInstance(mi, ctx, rslt, ref, properties,
                                       "sfcb_cimxmlcommunicationMechanism");
-  if (strcasecmp((char *) cls->hdl, "cim_indicationservice") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_indicationservice") == 0)
     return ServiceProviderGetInstance(mi, ctx, rslt, ref, properties,
                                       "cim_indicationservice");
   if (CMClassPathIsA
@@ -733,18 +733,18 @@ ServerProviderEnumInstanceNames(CMPIInstanceMI * mi,
 {
   CMPIString     *cls = CMGetClassName(ref, NULL);
 
-  if (strcasecmp((char *) cls->hdl, "cim_namespace") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_namespace") == 0)
     return NameSpaceProviderEnumInstanceNames(mi, ctx, rslt, ref, 0);
-  if (strcasecmp((char *) cls->hdl, "__namespace") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "__namespace") == 0)
     return NameSpaceProviderEnumInstanceNames(mi, ctx, rslt, ref, 1);
-  if (strcasecmp((char *) cls->hdl, "cim_objectmanager") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_objectmanager") == 0)
     return ServiceProviderEnumInstanceNames(mi, ctx, rslt, ref,
                                             "CIM_ObjectManager",
                                             "CIM_ComputerSystem");
-  if (strcasecmp
+  if (_SFCB_STRCASECMP
       ((char *) cls->hdl, "sfcb_cimxmlcommunicationMechanism") == 0)
     return ComMechProviderEnumInstanceNames(mi, ctx, rslt, ref);
-  if (strcasecmp((char *) cls->hdl, "cim_indicationservice") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_indicationservice") == 0)
     return ServiceProviderEnumInstanceNames(mi, ctx, rslt, ref,
                                             "CIM_IndicationService",
                                             "CIM_ComputerSystem");
@@ -765,24 +765,24 @@ ServerProviderEnumInstances(CMPIInstanceMI * mi,
 {
   CMPIString     *cls = CMGetClassName(ref, NULL);
 
-  if (strcasecmp((char *) cls->hdl, "cim_namespace") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_namespace") == 0)
     return NameSpaceProviderEnumInstances(mi, ctx, rslt, ref, properties,
                                           0);
-  if (strcasecmp((char *) cls->hdl, "__namespace") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "__namespace") == 0)
     return NameSpaceProviderEnumInstances(mi, ctx, rslt, ref, properties,
                                           1);
-  if (strcasecmp((char *) cls->hdl, "cim_objectmanager") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_objectmanager") == 0)
     return ObjectManagerProviderEnumInstances(mi, ctx, rslt, ref,
                                               properties);
-  if (strcasecmp
+  if (_SFCB_STRCASECMP
       ((char *) cls->hdl, "sfcb_cimxmlcommunicationMechanism") == 0)
     return ComMechProviderEnumInstances(mi, ctx, rslt, ref, properties);
-  if (strcasecmp((char *) cls->hdl, "cim_interopservice") == 0) /* do we * 
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_interopservice") == 0) /* do we * 
                                                                  * still * 
                                                                  * need *
                                                                  * this? */
     return ComMechProviderEnumInstances(mi, ctx, rslt, ref, properties);
-  if (strcasecmp((char *) cls->hdl, "cim_indicationservice") == 0)
+  if (_SFCB_STRCASECMP((char *) cls->hdl, "cim_indicationservice") == 0)
     return IndServiceProviderEnumInstances(mi, ctx, rslt, ref, properties);
   if (CMClassPathIsA
       (_broker, ref, "cim_indicationservicecapabilities", NULL))
@@ -973,12 +973,12 @@ buildAssoc(const CMPIContext *ctx,
   CMPIEnumeration *enm = NULL;
   CMPIStatus      rc = { CMPI_RC_OK, NULL };
 
-  if (strcasecmp(target, "AssocNames") == 0) {
+  if (_SFCB_STRCASECMP(target, "AssocNames") == 0) {
     enm = _broker->bft->enumerateInstanceNames(_broker, ctx, op, &rc);
     while (enm && enm->ft->hasNext(enm, &rc)) {
       CMReturnObjectPath(rslt, (enm->ft->getNext(enm, &rc).value.ref));
     }
-  } else if (strcasecmp(target, "Assocs") == 0) {
+  } else if (_SFCB_STRCASECMP(target, "Assocs") == 0) {
     enm = _broker->bft->enumerateInstances(_broker, ctx, op, NULL, &rc);
     while (enm && enm->ft->hasNext(enm, &rc)) {
       CMPIData        inst = CMGetNext(enm, &rc);
@@ -1031,7 +1031,7 @@ buildRefs(const CMPIContext *ctx,
     while (enm && CMHasNext(enm, &rc)) {
       CMPIData        inst = CMGetNext(enm, &rc);
       CMSetProperty(ci, "AffectedElement", &(inst.value.ref), CMPI_ref);
-      if (strcasecmp(target, "Refs") == 0) {
+      if (_SFCB_STRCASECMP(target, "Refs") == 0) {
         if (propertyList) {
           CMSetPropertyFilter(ci, propertyList, NULL);
         }
@@ -1042,7 +1042,7 @@ buildRefs(const CMPIContext *ctx,
     }
   } else {
     CMSetProperty(ci, "AffectedElement", &(op), CMPI_ref);
-    if (strcasecmp(target, "Refs") == 0) {
+    if (_SFCB_STRCASECMP(target, "Refs") == 0) {
       if (propertyList) {
         CMSetPropertyFilter(ci, propertyList, NULL);
       }
@@ -1083,14 +1083,14 @@ buildObj(const CMPIContext *ctx,
 {
   CMPIStatus      rc = { CMPI_RC_OK, NULL };
 
-  if (((strcasecmp(target, "Assocs") == 0)
-       || (strcasecmp(target, "AssocNames") == 0))
+  if (((_SFCB_STRCASECMP(target, "Assocs") == 0)
+       || (_SFCB_STRCASECMP(target, "AssocNames") == 0))
       && ((resultClass == NULL)
           || (CMClassPathIsA(_broker, op, resultClass, &rc) == 1))) {
     // Association was requested
     buildAssoc(ctx, rslt, op, propertyList, target);
-  } else if (((strcasecmp(target, "Refs") == 0)
-              || (strcasecmp(target, "RefNames") == 0))
+  } else if (((_SFCB_STRCASECMP(target, "Refs") == 0)
+              || (_SFCB_STRCASECMP(target, "RefNames") == 0))
              && ((resultClass == NULL)
                  || (CMClassPathIsA(_broker, saeop, resultClass, &rc) ==
                      1))) {
@@ -1137,11 +1137,11 @@ makeHostedService(CMPIAssociationMI * mi,
   /* make an instance for the antecedent 
      (System or ObjectManager) */
   CMPIString* acn = CMGetClassName(aop, NULL);
-  if (strcasecmp(CMGetCharPtr(acn), "CIM_System") == 0) {
+  if (_SFCB_STRCASECMP(CMGetCharPtr(acn), "CIM_System") == 0) {
     anti = CMNewInstance(_broker, aop, &rc);
     makeCIM_System(anti);
   }
-  else if (strcasecmp(CMGetCharPtr(acn), "CIM_ObjectManager") == 0) {
+  else if (_SFCB_STRCASECMP(CMGetCharPtr(acn), "CIM_ObjectManager") == 0) {
     anti = makeObjectManager();
   }
   else {  /* should never happen */
@@ -1153,12 +1153,12 @@ makeHostedService(CMPIAssociationMI * mi,
      (IndicationService or Namespace) */
   CMPIString* dcn = CMGetClassName(dop, NULL);
   CMPIValue depop;
-  if (strcasecmp(CMGetCharPtr(dcn), "CIM_IndicationService") == 0) {
+  if (_SFCB_STRCASECMP(CMGetCharPtr(dcn), "CIM_IndicationService") == 0) {
     denm = _broker->bft->enumerateInstanceNames(_broker, ctx, dop, &rc);
     CMPIData        dinst = CMGetNext(denm, &rc);
     depop = dinst.value;
   }
-  else if (strcasecmp(CMGetCharPtr(dcn), "CIM_Namespace") == 0) {
+  else if (_SFCB_STRCASECMP(CMGetCharPtr(dcn), "CIM_Namespace") == 0) {
     depop.ref = (CMPIObjectPath*)dop;
   }
   else {  /* should never happen */
@@ -1173,7 +1173,7 @@ makeHostedService(CMPIAssociationMI * mi,
 
   CMSetProperty(hdi, "Dependent", &(depop), CMPI_ref);
   CMSetProperty(hdi, "Antecedent", &(antiop), CMPI_ref);
-  if (strcasecmp(target, "Refs") == 0) {
+  if (_SFCB_STRCASECMP(target, "Refs") == 0) {
     if (propertyList) {
       CMSetPropertyFilter(hdi, propertyList, NULL);
     }
@@ -1218,7 +1218,7 @@ makeElementConforms(CMPIAssociationMI * mi,
   eci = CMNewInstance(_broker, ecop, &rc);
   CMSetProperty(eci, "ManagedElement", &(isinst.value), CMPI_ref);
   CMSetProperty(eci, "ConformantStandard", &(rpop), CMPI_ref);
-  if (strcasecmp(target, "Refs") == 0) {
+  if (_SFCB_STRCASECMP(target, "Refs") == 0) {
     if (propertyList) {
       CMSetPropertyFilter(eci, propertyList, NULL);
     }
@@ -1263,9 +1263,9 @@ static CMPIStatus handleAssocSAE(CMPIAssociationMI* mi,
       return rc;
     }
 
-    if ((role == NULL || (strcasecmp(role, "affectingelement") == 0))
+    if ((role == NULL || (_SFCB_STRCASECMP(role, "affectingelement") == 0))
         && (resultRole == NULL
-            || (strcasecmp(resultRole, "affectedelement") == 0))
+            || (_SFCB_STRCASECMP(resultRole, "affectedelement") == 0))
         && CMClassPathIsA(_broker, cop, "cim_indicationservice", &rc) == 1) {
       // We were given an IndicationService, so we need to return 
       // IndicationFilters and ListenerDestinations
@@ -1276,17 +1276,17 @@ static CMPIStatus handleAssocSAE(CMPIAssociationMI* mi,
       buildObj(ctx, rslt, resultClass, ldop, isop, saeop, propertyList,
                target);
     }
-    if ((role == NULL || strcasecmp(role, "affectedelement") == 0)
+    if ((role == NULL || _SFCB_STRCASECMP(role, "affectedelement") == 0)
         && (resultRole == NULL
-            || strcasecmp(resultRole, "affectingelement") == 0)
+            || _SFCB_STRCASECMP(resultRole, "affectingelement") == 0)
         &&
         ((CMClassPathIsA(_broker, cop, "cim_indicationfilter", &rc) == 1)
          || (CMClassPathIsA(_broker, cop, "cim_listenerdestination", &rc)
              == 1))) {
       // We were given either an IndicationFilter, or a
       // ListenerDestination,
-      if ((strcasecmp(target, "Assocs") == 0)
-          || (strcasecmp(target, "AssocNames") == 0)) {
+      if ((_SFCB_STRCASECMP(target, "Assocs") == 0)
+          || (_SFCB_STRCASECMP(target, "AssocNames") == 0)) {
         // Here we need the IndicationService only
         buildObj(ctx, rslt, resultClass, isop, isop, saeop, propertyList,
                  target);
@@ -1322,21 +1322,21 @@ static CMPIStatus handleAssocHostedService(CMPIAssociationMI* mi,
       return rc;
     }
 
-    if ((role == NULL || (strcasecmp(role, "dependent") == 0))
+    if ((role == NULL || (_SFCB_STRCASECMP(role, "dependent") == 0))
         && (resultRole == NULL
-            || (strcasecmp(resultRole, "antecedent") == 0))
+            || (_SFCB_STRCASECMP(resultRole, "antecedent") == 0))
         && CMClassPathIsA(_broker, cop, "cim_indicationservice", &rc) == 1) {
       // An IndicationService was passed in, so we need to return either
       // the 
       // CIM_System instance or a CIM_HostedService association instance
-      if (((strcasecmp(target, "Assocs") == 0)
-           || (strcasecmp(target, "AssocNames") == 0))
+      if (((_SFCB_STRCASECMP(target, "Assocs") == 0)
+           || (_SFCB_STRCASECMP(target, "AssocNames") == 0))
           && (resultClass == NULL
-              || (strcasecmp(resultClass, "CIM_System") == 0))) {
+              || (_SFCB_STRCASECMP(resultClass, "CIM_System") == 0))) {
         // Return the CIM_System instance
         CMPIInstance* cci = CMNewInstance(_broker, csop, &rc);
         makeCIM_System(cci);
-        if (strcasecmp(target, "Assocs") == 0) {
+        if (_SFCB_STRCASECMP(target, "Assocs") == 0) {
           if (propertyList) {
             CMSetPropertyFilter(cci, propertyList, NULL);
           }
@@ -1348,32 +1348,32 @@ static CMPIStatus handleAssocHostedService(CMPIAssociationMI* mi,
           CMRelease(cci);
 
       } else if (resultClass == NULL
-                 || (strcasecmp(resultClass, "CIM_HostedService") == 0)) {
+                 || (_SFCB_STRCASECMP(resultClass, "CIM_HostedService") == 0)) {
         // Return the CIM_HostedService instance
         makeHostedService(mi, ctx, rslt, isop, hsop, csop, propertyList,
                           target);
       } 
 
     }
-    if ((role == NULL || strcasecmp(role, "antecedent") == 0)
-        && (resultRole == NULL || strcasecmp(resultRole, "dependent") == 0)
+    if ((role == NULL || _SFCB_STRCASECMP(role, "antecedent") == 0)
+        && (resultRole == NULL || _SFCB_STRCASECMP(resultRole, "dependent") == 0)
         && (CMClassPathIsA(_broker, cop, "cim_system", &rc) == 1)) {
       // A CIM_System was passed in so wee need to return either the
       // CIM_IndicationService instance or a CIM_HostedService association 
       // 
       // 
       // instance
-      if (((strcasecmp(target, "Assocs") == 0)
-           || (strcasecmp(target, "AssocNames") == 0))
+      if (((_SFCB_STRCASECMP(target, "Assocs") == 0)
+           || (_SFCB_STRCASECMP(target, "AssocNames") == 0))
           && (resultClass == NULL
-              || (strcasecmp(resultClass, "CIM_IndicationService") ==
+              || (_SFCB_STRCASECMP(resultClass, "CIM_IndicationService") ==
                   0))) {
         // Return the CIM_IndicationService instance
         CMPIEnumeration* isenm =
             _broker->bft->enumerateInstances(_broker, ctx, isop, NULL,
                                              &rc);
         CMPIData        inst = CMGetNext(isenm, &rc);
-        if (strcasecmp(target, "Assocs") == 0) {
+        if (_SFCB_STRCASECMP(target, "Assocs") == 0) {
           if (propertyList) {
             CMSetPropertyFilter(inst.value.inst, propertyList, NULL);
           }
@@ -1384,7 +1384,7 @@ static CMPIStatus handleAssocHostedService(CMPIAssociationMI* mi,
         if (isenm)
           CMRelease(isenm);
       } else if (resultClass == NULL
-                 || (strcasecmp(resultClass, "CIM_HostedService") == 0)) {
+                 || (_SFCB_STRCASECMP(resultClass, "CIM_HostedService") == 0)) {
         // Return the CIM_HostedService instance
         makeHostedService(mi, ctx, rslt, isop, hsop, csop, propertyList,
                           target);
@@ -1418,14 +1418,14 @@ static CMPIStatus handleAssocNIM(CMPIAssociationMI* mi,
     
     /* A Namespace was passed in, so we need to return either
        the ObjectManager instance or an association instance */
-    if ((role == NULL || (strcasecmp(role, "dependent") == 0))
+    if ((role == NULL || (_SFCB_STRCASECMP(role, "dependent") == 0))
         && (resultRole == NULL
-            || (strcasecmp(resultRole, "antecedent") == 0))
+            || (_SFCB_STRCASECMP(resultRole, "antecedent") == 0))
         && CMClassPathIsA(_broker, cop, "cim_namespace", &rc) == 1) {
-      if (((strcasecmp(target, "Assocs") == 0)
-           || (strcasecmp(target, "AssocNames") == 0))
+      if (((_SFCB_STRCASECMP(target, "Assocs") == 0)
+           || (_SFCB_STRCASECMP(target, "AssocNames") == 0))
           && (resultClass == NULL
-              || (strcasecmp(resultClass, "CIM_ObjectManager") == 0))) {
+              || (_SFCB_STRCASECMP(resultClass, "CIM_ObjectManager") == 0))) {
 
         /* check it if the ObjectManager cop exists */
         CBGetInstance(_broker, ctx, cop, NULL, &rc);
@@ -1434,7 +1434,7 @@ static CMPIStatus handleAssocNIM(CMPIAssociationMI* mi,
 
         /* Return the CIM_ObjectManager instance */
         CMPIInstance* cci = makeObjectManager();
-        if (strcasecmp(target, "Assocs") == 0) {
+        if (_SFCB_STRCASECMP(target, "Assocs") == 0) {
           if (propertyList) {
             CMSetPropertyFilter(cci, propertyList, NULL);
           }
@@ -1446,7 +1446,7 @@ static CMPIStatus handleAssocNIM(CMPIAssociationMI* mi,
           CMRelease(cci);
 
       } else if (resultClass == NULL
-                 || (strcasecmp(resultClass, "CIM_NamespaceInManager") == 0)) {
+                 || (_SFCB_STRCASECMP(resultClass, "CIM_NamespaceInManager") == 0)) {
         /* Return the NIM instance */
         makeHostedService(mi, ctx, rslt, nsop, nimop, omop, propertyList,
                           target);
@@ -1457,8 +1457,8 @@ static CMPIStatus handleAssocNIM(CMPIAssociationMI* mi,
     /* An ObjectManager was passed in so wee need to return either the
      * Namespace instances or a CIM_NamespaceInManager association 
      * instance */
-    if ((role == NULL || strcasecmp(role, "antecedent") == 0)
-        && (resultRole == NULL || strcasecmp(resultRole, "dependent") == 0)
+    if ((role == NULL || _SFCB_STRCASECMP(role, "antecedent") == 0)
+        && (resultRole == NULL || _SFCB_STRCASECMP(resultRole, "dependent") == 0)
         && (CMClassPathIsA(_broker, cop, "cim_objectmanager", &rc) == 1)) {
 
       /* check it if the ObjectManager cop exists */
@@ -1466,10 +1466,10 @@ static CMPIStatus handleAssocNIM(CMPIAssociationMI* mi,
       if (rc.rc != CMPI_RC_OK)
         return rc;
 
-      if (((strcasecmp(target, "Assocs") == 0)
-           || (strcasecmp(target, "AssocNames") == 0))
+      if (((_SFCB_STRCASECMP(target, "Assocs") == 0)
+           || (_SFCB_STRCASECMP(target, "AssocNames") == 0))
           && (resultClass == NULL
-              || (strcasecmp(resultClass, "CIM_Namespace") ==
+              || (_SFCB_STRCASECMP(resultClass, "CIM_Namespace") ==
                   0))) {
         /* Return the CIM_Namespace instances */
         CMPIEnumeration* nsenm =
@@ -1477,7 +1477,7 @@ static CMPIStatus handleAssocNIM(CMPIAssociationMI* mi,
         CMPIData        inst = CMGetNext(nsenm, &rc);
         for (; inst.state == CMPI_goodValue; inst = CMGetNext(nsenm, &rc)) {
           
-          if (strcasecmp(target, "Assocs") == 0) {
+          if (_SFCB_STRCASECMP(target, "Assocs") == 0) {
             if (propertyList) {
               CMSetPropertyFilter(inst.value.inst, propertyList, NULL);
             }
@@ -1489,7 +1489,7 @@ static CMPIStatus handleAssocNIM(CMPIAssociationMI* mi,
         if (nsenm)
           CMRelease(nsenm);
       } else if (resultClass == NULL
-                 || (strcasecmp(resultClass, "CIM_NamespaceInManager") == 0)) {
+                 || (_SFCB_STRCASECMP(resultClass, "CIM_NamespaceInManager") == 0)) {
         /* Return the NIM instance */
         makeHostedService(mi, ctx, rslt, nsop, nimop, omop, propertyList,
                           target);
@@ -1522,25 +1522,25 @@ static CMPIStatus handleAssocElementConforms(CMPIAssociationMI* mi,
                            "Create CMPIObjectPath failed.");
       return rc;
     }
-    if ((role == NULL || (strcasecmp(role, "ManagedElement") == 0))
+    if ((role == NULL || (_SFCB_STRCASECMP(role, "ManagedElement") == 0))
         && (resultRole == NULL
-            || (strcasecmp(resultRole, "ConformantStandard") == 0))
+            || (_SFCB_STRCASECMP(resultRole, "ConformantStandard") == 0))
         && CMClassPathIsA(_broker, cop, "cim_indicationservice", &rc) == 1) {
       // An IndicationService was passed in, so we need to return either
       // the 
       // CIM_RegisteredProfile instance or a SFCB_ElementConformstoProfile
       // association instance
-      if (((strcasecmp(target, "Assocs") == 0)
-           || (strcasecmp(target, "AssocNames") == 0))
+      if (((_SFCB_STRCASECMP(target, "Assocs") == 0)
+           || (_SFCB_STRCASECMP(target, "AssocNames") == 0))
           && (resultClass == NULL
-              || (strcasecmp(resultClass, "SFCB_RegisteredProfile") ==
+              || (_SFCB_STRCASECMP(resultClass, "SFCB_RegisteredProfile") ==
                   0))) {
         // Return the CIM_RegisteredProfile instance
         // buildAssoc(ctx,rslt,rpop,propertyList,target);
         CMAddKey(rpop, "InstanceID", "CIM:SFCB_IP", CMPI_chars);
-        if (strcasecmp(target, "AssocNames") == 0) {
+        if (_SFCB_STRCASECMP(target, "AssocNames") == 0) {
           CMReturnObjectPath(rslt, rpop);
-        } else if (strcasecmp(target, "Assocs") == 0) {
+        } else if (_SFCB_STRCASECMP(target, "Assocs") == 0) {
           CMPIInstance   *lci =
               CBGetInstance(_broker, ctx, rpop, NULL, &rc);
           if (propertyList) {
@@ -1550,37 +1550,37 @@ static CMPIStatus handleAssocElementConforms(CMPIAssociationMI* mi,
         }
       } else if (resultClass == NULL
                  ||
-                 (strcasecmp(resultClass, "SFCB_ElementConformsToProfile")
+                 (_SFCB_STRCASECMP(resultClass, "SFCB_ElementConformsToProfile")
                   == 0)
                  ||
-                 (strcasecmp(resultClass, "CIM_ElementConformsToProfile")
+                 (_SFCB_STRCASECMP(resultClass, "CIM_ElementConformsToProfile")
                   == 0)) {
         // Return the SFCB_ElementConformsToProfile association
         makeElementConforms(mi, ctx, rslt, isop, ecpop, rpop, propertyList,
                             target);
       }
     }
-    if ((role == NULL || strcasecmp(role, "antecedent") == 0)
-        && (resultRole == NULL || strcasecmp(resultRole, "dependent") == 0)
+    if ((role == NULL || _SFCB_STRCASECMP(role, "antecedent") == 0)
+        && (resultRole == NULL || _SFCB_STRCASECMP(resultRole, "dependent") == 0)
         && (CMClassPathIsA(_broker, cop, "cim_RegisteredProfile", &rc) ==
             1)) {
       // A CIM_RegisteredProfile was passed in so wee need to return
       // either the
       // CIM_IndicationService instance or a SFCB_ElementConformsToProfile
       // association instance
-      if (((strcasecmp(target, "Assocs") == 0)
-           || (strcasecmp(target, "AssocNames") == 0))
+      if (((_SFCB_STRCASECMP(target, "Assocs") == 0)
+           || (_SFCB_STRCASECMP(target, "AssocNames") == 0))
           && (resultClass == NULL
-              || (strcasecmp(resultClass, "CIM_IndicationService") ==
+              || (_SFCB_STRCASECMP(resultClass, "CIM_IndicationService") ==
                   0))) {
         // Return the CIM_IndicationService instance
         buildAssoc(ctx, rslt, isop, propertyList, target);
       } else if (resultClass == NULL
                  ||
-                 (strcasecmp(resultClass, "SFCB_ElementConformsToProfile")
+                 (_SFCB_STRCASECMP(resultClass, "SFCB_ElementConformsToProfile")
                   == 0)
                  ||
-                 (strcasecmp(resultClass, "CIM_ElementConformsToProfile")
+                 (_SFCB_STRCASECMP(resultClass, "CIM_ElementConformsToProfile")
                   == 0)) {
         // Return the SFCB_ElementConformsToProfile association
         makeElementConforms(mi, ctx, rslt, isop, ecpop, rpop, propertyList,
@@ -1615,27 +1615,27 @@ getAssociators(CMPIAssociationMI * mi,
     *nimop = NULL;
 
   // Make sure role & resultRole are valid
-  if (role && resultRole && (strcasecmp(role, resultRole) == 0)) {
+  if (role && resultRole && (_SFCB_STRCASECMP(role, resultRole) == 0)) {
     CMSetStatusWithChars(_broker, &rc, CMPI_RC_ERR_FAILED,
                          "role and resultRole cannot be equal.");
     return rc;
   }
-  if (role && (strcasecmp(role, "AffectingElement") != 0)
-      && (strcasecmp(role, "AffectedElement") != 0)
-      && (strcasecmp(role, "ConformantStandard") != 0)
-      && (strcasecmp(role, "ManagedElement") != 0)
-      && (strcasecmp(role, "Antecedent") != 0)
-      && (strcasecmp(role, "Dependent") != 0)) {
+  if (role && (_SFCB_STRCASECMP(role, "AffectingElement") != 0)
+      && (_SFCB_STRCASECMP(role, "AffectedElement") != 0)
+      && (_SFCB_STRCASECMP(role, "ConformantStandard") != 0)
+      && (_SFCB_STRCASECMP(role, "ManagedElement") != 0)
+      && (_SFCB_STRCASECMP(role, "Antecedent") != 0)
+      && (_SFCB_STRCASECMP(role, "Dependent") != 0)) {
     CMSetStatusWithChars(_broker, &rc, CMPI_RC_ERR_FAILED,
                          "Invalid value for role .");
     return rc;
   }
-  if (resultRole && (strcasecmp(resultRole, "AffectingElement") != 0)
-      && (strcasecmp(resultRole, "AffectedElement") != 0)
-      && (strcasecmp(resultRole, "ConformantStandard") != 0)
-      && (strcasecmp(resultRole, "ManagedElement") != 0)
-      && (strcasecmp(resultRole, "Antecedent") != 0)
-      && (strcasecmp(resultRole, "Dependent") != 0)) {
+  if (resultRole && (_SFCB_STRCASECMP(resultRole, "AffectingElement") != 0)
+      && (_SFCB_STRCASECMP(resultRole, "AffectedElement") != 0)
+      && (_SFCB_STRCASECMP(resultRole, "ConformantStandard") != 0)
+      && (_SFCB_STRCASECMP(resultRole, "ManagedElement") != 0)
+      && (_SFCB_STRCASECMP(resultRole, "Antecedent") != 0)
+      && (_SFCB_STRCASECMP(resultRole, "Dependent") != 0)) {
     CMSetStatusWithChars(_broker, &rc, CMPI_RC_ERR_FAILED,
                          "Invalid value for resultRole .");
     return rc;

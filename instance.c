@@ -124,7 +124,7 @@ __contained_list(char **list, const char *name)
 {
   if (list) {
     while (*list) {
-      if (strcasecmp(*list++, name) == 0)
+      if (_SFCB_STRCASECMP(*list++, name) == 0)
         return 1;
     }
   }

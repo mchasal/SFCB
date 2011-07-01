@@ -107,7 +107,7 @@ char           *opsName[];
   if (info->className && info->className[0] != '$') {             \
     char * classname = CMGetCharPtr(CMGetClassName(path,NULL));   \
     char * namespace = CMGetCharPtr(CMGetNameSpace(path,NULL));         \
-    if (classname && namespace && strcasecmp(info->className,classname)) { \
+    if (classname && namespace && _SFCB_STRCASECMP(info->className,classname)) { \
       CMPIObjectPath * provPath = CMNewObjectPath(Broker,namespace,info->className,NULL); \
       if (provPath && CMClassPathIsA(Broker,provPath,classname,NULL)) { \
         _SFCB_TRACE(1, ("--- Replacing class name %s",info->className)); \

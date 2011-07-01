@@ -539,7 +539,7 @@ getNsReg(const CMPIObjectPath * ref, int *rc)
 
   if (nsi && nsi->hdl) {
     ns = (char *) nsi->hdl;
-    if (strcasecmp(ns, "root/pg_interop") == 0)
+    if (_SFCB_STRCASECMP(ns, "root/pg_interop") == 0)
       cReg = nsHt->ft->get(nsHt, "root/interop");
     else
       cReg = nsHt->ft->get(nsHt, ns);
@@ -708,7 +708,7 @@ ClassProviderEnumClassNames(CMPIClassMI * mi,
 
   cReg->ft->wLock(cReg);
 
-  if (cn && strcasecmp(cn, "$ClassProvider$") == 0)
+  if (cn && _SFCB_STRCASECMP(cn, "$ClassProvider$") == 0)
     cn = NULL;
 
   if (cn == NULL) {
@@ -937,8 +937,8 @@ repCandidate(ClassRegister * cReg, char *cn)
 
   _SFCB_ENTER(TRACE_PROVIDERS, "repCandidate");
 
-  if (strcasecmp(cn, "cim_indicationfilter") == 0 ||
-      strcasecmp(cn, "cim_indicationsubscription") == 0)
+  if (_SFCB_STRCASECMP(cn, "cim_indicationfilter") == 0 ||
+      _SFCB_STRCASECMP(cn, "cim_indicationsubscription") == 0)
     _SFCB_RETURN(0);
 
   while (cn != NULL) {
@@ -1022,7 +1022,7 @@ ClassProviderInvokeMethod(CMPIMethodMI * mi,
     _SFCB_RETURN(st);
   }
 
-  if (strcasecmp(methodName, "getchildren") == 0) {
+  if (_SFCB_STRCASECMP(methodName, "getchildren") == 0) {
     CMPIData        cn = CMGetArg(in, "class", NULL);
     _SFCB_TRACE(1, ("--- getchildren %s", (char *) cn.value.string->hdl));
 
@@ -1050,7 +1050,7 @@ ClassProviderInvokeMethod(CMPIMethodMI * mi,
 
   }
 
-  else if (strcasecmp(methodName, "getallchildren") == 0) {
+  else if (_SFCB_STRCASECMP(methodName, "getallchildren") == 0) {
     int             ignprov = 0;
     CMPIStatus      st;
     CMPIData        cn = CMGetArg(in, "class", &st);
@@ -1081,7 +1081,7 @@ ClassProviderInvokeMethod(CMPIMethodMI * mi,
     cReg->ft->wUnLock(cReg);
   }
 
-  else if (strcasecmp(methodName, "getassocs") == 0) {
+  else if (_SFCB_STRCASECMP(methodName, "getassocs") == 0) {
     ar = CMNewArray(_broker, cReg->topAssocs, CMPI_string, NULL);
     ClassBase      *cb = (ClassBase *) (cReg + 1);
     UtilHashTable  *ct = cb->ht;
@@ -1106,14 +1106,14 @@ ClassProviderInvokeMethod(CMPIMethodMI * mi,
     cReg->ft->wUnLock(cReg);
   }
 
-  else if (strcasecmp(methodName, "ischild") == 0) {
+  else if (_SFCB_STRCASECMP(methodName, "ischild") == 0) {
     char           *parent = (char *) CMGetClassName(ref, NULL)->hdl;
     char           *chldn =
         (char *) CMGetArg(in, "child", NULL).value.string->hdl;
     st.rc = traverseChildren(cReg, parent, chldn);
   }
 
-  else if (strcasecmp(methodName, "_startup") == 0) {
+  else if (_SFCB_STRCASECMP(methodName, "_startup") == 0) {
 
     /*
      * check to see if cacheLimit was specified in providerRegister 
@@ -1163,7 +1163,7 @@ traverseChildren(ClassRegister * cReg, const char *parent,
   if (ul)
     for (child = (char *) ul->ft->getFirst(ul); child;
          child = (char *) ul->ft->getNext(ul)) {
-      if (strcasecmp(child, chldn) == 0) {
+      if (_SFCB_STRCASECMP(child, chldn) == 0) {
         rc = CMPI_RC_OK;
         break;
       } else {

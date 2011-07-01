@@ -841,7 +841,7 @@ locateQualifier(ClObjectHdr * hdr, ClSection * qlfs, const char *id)
   q = (ClQualifier *) getSectionPtr(hdr, qlfs);
 
   for (i = 0; i < qlfs->used; i++) {
-    if (strcasecmp(id, ClObjectGetClString(hdr, &(q + i)->id)) == 0)
+    if (_SFCB_STRCASECMP(id, ClObjectGetClString(hdr, &(q + i)->id)) == 0)
       return i + 1;
   }
   return 0;
@@ -892,11 +892,11 @@ ClClassAddQualifierSpecial(ClObjectHdr * hdr, ClSection * qlfs,
 
   if (hdr->type == HDR_Class) {
     ClClass        *cls = (ClClass *) hdr;
-    if (strcasecmp(id, "Abstract") == 0)
+    if (_SFCB_STRCASECMP(id, "Abstract") == 0)
       cls->quals |= ClClass_Q_Abstract;
-    else if (strcasecmp(id, "Association") == 0)
+    else if (_SFCB_STRCASECMP(id, "Association") == 0)
       cls->quals |= ClClass_Q_Association;
-    else if (strcasecmp(id, "Indication") == 0)
+    else if (_SFCB_STRCASECMP(id, "Indication") == 0)
       cls->quals |= ClClass_Q_Indication;
     else {
       return addClQualifier(hdr, qlfs, id, d, arrHdr);
@@ -919,9 +919,9 @@ ClClassAddPropertyQualifierSpecial(ClObjectHdr * hdr, ClProperty * p,
                                    const char *id, CMPIData d,
                                    ClObjectHdr * arrHdr)
 {
-  if (strcasecmp(id, "key") == 0)
+  if (_SFCB_STRCASECMP(id, "key") == 0)
     p->quals |= ClProperty_Q_Key;
-  else if (strcasecmp(id, "embeddedobject") == 0)
+  else if (_SFCB_STRCASECMP(id, "embeddedobject") == 0)
     p->quals |= ClProperty_Q_EmbeddedObject;
   else
     return ClClassAddQualifierSpecial(hdr, &p->qualifiers, id, d, arrHdr);
@@ -1065,7 +1065,7 @@ locateParameter(ClObjectHdr * hdr, ClSection * prms, const char *id)
   p = (ClParameter *) getSectionPtr(hdr, prms);
 
   for (i = 0; i < prms->used; i++) {
-    if (strcasecmp(id, ClObjectGetClString(hdr, &(p + i)->id)) == 0)
+    if (_SFCB_STRCASECMP(id, ClObjectGetClString(hdr, &(p + i)->id)) == 0)
       return i + 1;
   }
   return 0;
@@ -1190,7 +1190,7 @@ ClClassLocateMethod(ClObjectHdr * hdr, ClSection * mths, const char *id)
   m = (ClMethod *) getSectionPtr(hdr, mths);
 
   for (i = 0; i < mths->used; i++) {
-    if (strcasecmp(id, ClObjectGetClString(hdr, &(m + i)->id)) == 0)
+    if (_SFCB_STRCASECMP(id, ClObjectGetClString(hdr, &(m + i)->id)) == 0)
       return i + 1;
   }
   return 0;
@@ -1357,7 +1357,7 @@ ClObjectLocateProperty(ClObjectHdr * hdr, ClSection * prps, const char *id)
 
   p = (ClProperty *) getSectionPtr(hdr, prps);
   for (i = 0; i < prps->used; i++) {
-    if (strcasecmp(id, ClObjectGetClString(hdr, &(p + i)->id)) == 0)
+    if (_SFCB_STRCASECMP(id, ClObjectGetClString(hdr, &(p + i)->id)) == 0)
       return i + 1;
   }
   return 0;

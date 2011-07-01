@@ -160,7 +160,7 @@ qsTestPropertyClass(QLStatement * st, char *cl)
   int             i;
   QL_TRACE(fprintf(stderr, "--- testPropertyClass: %s\n", cl));
   for (i = 0; i < st->fcNext; i++)
-    if ((strcasecmp(cl, st->fClasses[i])) == 0)
+    if ((_SFCB_STRCASECMP(cl, st->fClasses[i])) == 0)
       return 1;
   return 0;
 }
@@ -284,10 +284,10 @@ parseQuery(int mode, const char *query, const char *lang, const char *sns,
   q = (char *) query;
   ofs = 0;
   ctl.statement = qs = newQLStatement(8, mode);
-  if (strcasecmp(lang, "wql") == 0)
+  if (_SFCB_STRCASECMP(lang, "wql") == 0)
     ctl.statement->lang = QL_WQL;
-  else if (strcasecmp(lang, "cql") == 0
-           || strcasecmp(lang, "cim:cql") == 0) {
+  else if (_SFCB_STRCASECMP(lang, "cql") == 0
+           || _SFCB_STRCASECMP(lang, "cim:cql") == 0) {
     ctl.statement->lang = QL_CQL;
   } else
     ctl.statement->lang = 0;

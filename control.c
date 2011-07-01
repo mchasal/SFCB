@@ -309,7 +309,7 @@ getControlBool(char *id, int *val)
   int             rc = -1;
   if ((ctl = ct->ft->get(ct, id))) {
     if (ctl->type == 2) {
-      *val = strcasecmp(ctl->strValue, "true") == 0;
+      *val = _SFCB_STRCASECMP(ctl->strValue, "true") == 0;
       return 0;
     }
     rc = -2;

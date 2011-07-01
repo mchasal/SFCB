@@ -56,7 +56,7 @@ static const CMPIBroker *_broker;
 static const char *
 repositoryNs(const char *nss)
 {
-  if (strcasecmp(nss, pg_interopNs) == 0) {
+  if (_SFCB_STRCASECMP(nss, pg_interopNs) == 0) {
     return interopNs;
   } else {
     return nss;
@@ -129,7 +129,7 @@ testNameSpace(const char *ns, CMPIStatus *st)
   char          **nsp = nsTab;
 
   if (interOpProvInfoPtr == forceNoProvInfoPtr) {
-    if (strcasecmp(ns, interopNs) == 0) {
+    if (_SFCB_STRCASECMP(ns, interopNs) == 0) {
       st->msg =
           sfcb_native_new_CMPIString("Interop namespace disabled", NULL,
                                      0);
@@ -139,7 +139,7 @@ testNameSpace(const char *ns, CMPIStatus *st)
   }
 
   while (nsTabLen && *nsp) {
-    if (strcasecmp(*nsp, ns) == 0)
+    if (_SFCB_STRCASECMP(*nsp, ns) == 0)
       return 1;
     nsp++;
   }

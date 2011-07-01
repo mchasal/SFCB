@@ -138,7 +138,7 @@ __beft_classPathIsA(const CMPIBroker * broker,
   _SFCB_ENTER(TRACE_ENCCALLS, "classPathIsA");
 
   if (clsn && clsn->hdl && type) {
-    if (strcasecmp(type, (char *) clsn->hdl) == 0)
+    if (_SFCB_STRCASECMP(type, (char *) clsn->hdl) == 0)
       _SFCB_RETURN(1);
   } else
     _SFCB_RETURN(0);
@@ -148,7 +148,7 @@ __beft_classPathIsA(const CMPIBroker * broker,
 
   if (cc && type)
     for (; (scn = (char *) cc->ft->getCharSuperClassName(cc)) != NULL;) {
-      if (strcasecmp(scn, type) == 0)
+      if (_SFCB_STRCASECMP(scn, type) == 0)
         return 1;
       cc = (CMPIConstClass *) getConstClass(ns, scn);
       if (cc == NULL)

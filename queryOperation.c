@@ -342,7 +342,7 @@ instCompare(QLOperand * self, QLOperand * op, QLPropertySource * src)
   }
 
   if (type == QL_Name) {
-    if (strcasecmp(sov, op->charsVal) == 0)
+    if (_SFCB_STRCASECMP(sov, op->charsVal) == 0)
       return 0;
     return isChild(src->sns, op->charsVal, sov) == 0;
   }

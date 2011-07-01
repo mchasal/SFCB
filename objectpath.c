@@ -720,7 +720,7 @@ typedef struct keyIds {
 static int
 qCompare(const void *arg1, const void *arg2)
 {
-  return strcasecmp((char *) ((KeyIds *) arg1)->key->hdl,
+  return _SFCB_STRCASECMP((char *) ((KeyIds *) arg1)->key->hdl,
                     (char *) ((KeyIds *) arg2)->key->hdl);
 }
 

@@ -131,8 +131,8 @@ getProvIds(ProviderInfo * info)
 int
 interopClass(char *className)
 {
-  if (strcasecmp(className, "cim_indicationfilter") == 0 ||
-      strcasecmp(className, "cim_indicationsubscription") == 0)
+  if (_SFCB_STRCASECMP(className, "cim_indicationfilter") == 0 ||
+      _SFCB_STRCASECMP(className, "cim_indicationsubscription") == 0)
     return 1;
   return 0;
 }
@@ -166,17 +166,17 @@ nameSpaceOk(ProviderInfo * info, char *nameSpace)
               ("--- testing for %s on %s", nameSpace, info->providerName));
 
   if (info->ns) {
-    if (strcasecmp(*info->ns, "*") == 0)
+    if (_SFCB_STRCASECMP(*info->ns, "*") == 0)
       _SFCB_RETURN(1);
     for (ns = info->ns; *ns; ns++) {
-      if (strcasecmp(*ns, nameSpace) == 0)
+      if (_SFCB_STRCASECMP(*ns, nameSpace) == 0)
         _SFCB_RETURN(1);
     }
   }
   if (info == classProvInfoPtr)
     _SFCB_RETURN(1);
 
-  if (strcasecmp(nameSpace, "root/pg_interop") == 0)
+  if (_SFCB_STRCASECMP(nameSpace, "root/pg_interop") == 0)
     return nameSpaceOk(info, "root/interop");
 
   _SFCB_TRACE(1, ("--- failed"));
@@ -757,8 +757,8 @@ getMethodProvider(char *className, char *nameSpace)
   if (info)
     _SFCB_RETURN(info);
 
-  if (strcasecmp(className, "cim_indicationfilter") == 0 ||
-      strcasecmp(className, "cim_indicationsubscription") == 0)
+  if (_SFCB_STRCASECMP(className, "cim_indicationfilter") == 0 ||
+      _SFCB_STRCASECMP(className, "cim_indicationsubscription") == 0)
     _SFCB_RETURN(interOpProvInfoPtr);
 
   cls = className ? strdup(className) : NULL;

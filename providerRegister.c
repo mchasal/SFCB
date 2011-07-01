@@ -422,7 +422,7 @@ locateProvider(ProviderRegister * br, const char *provName)
        key && it && info;
        it =
        bb->ht->ft->getNext(bb->ht, it, (void **) &key, (void **) &info)) {
-    if (strcasecmp(info->providerName, provName) == 0)
+    if (_SFCB_STRCASECMP(info->providerName, provName) == 0)
       return info;
   }
   return NULL;

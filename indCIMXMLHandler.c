@@ -54,7 +54,7 @@ static int
 interOpNameSpace(const CMPIObjectPath * cop, CMPIStatus *st)
 {
   char           *ns = (char *) CMGetNameSpace(cop, NULL)->hdl;
-  if (strcasecmp(ns, "root/interop") && strcasecmp(ns, "root/pg_interop")) {
+  if (_SFCB_STRCASECMP(ns, "root/interop") && strcasecmp(ns, "root/pg_interop")) {
     setStatus(st, CMPI_RC_ERR_FAILED,
               "Object must reside in root/interop");
     return 0;
@@ -118,7 +118,7 @@ IndCIMXMLHandlerEnumInstanceNames(CMPIInstanceMI * mi,
   CMPIObjectPath *refLocal;
   cn = CMGetClassName(ref, &st);
 
-  if (strcasecmp(CMGetCharPtr(cn), "cim_listenerdestination") == 0) {
+  if (_SFCB_STRCASECMP(CMGetCharPtr(cn), "cim_listenerdestination") == 0) {
     enm =
         _broker->bft->enumerateInstanceNames(_broker, ctxLocal, ref, &st);
     while (enm && enm->ft->hasNext(enm, &st)) {
@@ -208,7 +208,7 @@ isa(const char *sns, const char *child, const char *parent)
   int             rv;
   _SFCB_ENTER(TRACE_INDPROVIDER, "isa");
     
-  if (strcasecmp(child, parent) == 0)
+  if (_SFCB_STRCASECMP(child, parent) == 0)
     return 1;
   rv = isChild(sns, parent, child);
   _SFCB_RETURN(rv);
@@ -236,7 +236,7 @@ IndCIMXMLHandlerEnumInstances(CMPIInstanceMI * mi,
   CMPIObjectPath *refLocal;
   cn = CMGetClassName(ref, &st);
 
-  if (strcasecmp(CMGetCharPtr(cn), "cim_listenerdestination") == 0) {
+  if (_SFCB_STRCASECMP(CMGetCharPtr(cn), "cim_listenerdestination") == 0) {
     enm =
         _broker->bft->enumerateInstances(_broker, ctxLocal, ref,
                                          properties, &st);
@@ -964,7 +964,7 @@ IndCIMXMLHandlerInvokeMethod(CMPIMethodMI * mi,
   if (interOpNameSpace(ref, &st) == 0)
     _SFCB_RETURN(st);
 
-  if (strcasecmp(methodName, "_deliver") == 0) {
+  if (_SFCB_STRCASECMP(methodName, "_deliver") == 0) {
 
     // Set the indication sequence values
     CMPIInstance *indo=CMGetArg(in,"indication",NULL).value.inst;

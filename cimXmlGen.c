@@ -146,15 +146,15 @@ getKeyValueTypePtr(char *type, char *value, XtokValueReference * ref,
                    CMPIValue * val, CMPIType *typ, char *scopingNS)
 {
   if (type) {
-    if (strcasecmp(type, "string") == 0);
-    else if (strcasecmp(type, "boolean") == 0) {
+    if (_SFCB_STRCASECMP(type, "string") == 0);
+    else if (_SFCB_STRCASECMP(type, "boolean") == 0) {
       *typ = CMPI_boolean;
-      if (strcasecmp(value, "true") == 0)
+      if (_SFCB_STRCASECMP(value, "true") == 0)
         val->boolean = 1;
       else
         val->boolean = 0;
       return val;
-    } else if (strcasecmp(type, "numeric") == 0) {
+    } else if (_SFCB_STRCASECMP(type, "numeric") == 0) {
       if (value[0] == '+' || value[0] == '-') {
         *typ = CMPI_sint64;
         sscanf(value, "%lld", &val->uint64);
@@ -163,7 +163,7 @@ getKeyValueTypePtr(char *type, char *value, XtokValueReference * ref,
         *typ = CMPI_uint64;
       }
       return val;
-    } else if (strcasecmp(type, "ref") == 0) {
+    } else if (_SFCB_STRCASECMP(type, "ref") == 0) {
       CMPIObjectPath *op;
       char           *hn = "",
           *ns = "",
@@ -306,9 +306,9 @@ guessType(char *val)
       if (!isdigit(*c))
         break;
     }
-  } else if (strcasecmp(val, "true") == 0)
+  } else if (_SFCB_STRCASECMP(val, "true") == 0)
     return CMPI_boolean;
-  else if (strcasecmp(val, "false") == 0)
+  else if (_SFCB_STRCASECMP(val, "false") == 0)
     return CMPI_boolean;
   return CMPI_string;
 }
@@ -420,7 +420,7 @@ str2CMPIValue(CMPIType type, XtokValue val, XtokValueReference * ref,
     value.sint8 = value.sint32;
     break;
   case CMPI_boolean:
-    value.boolean = strcasecmp(val.value, "false");
+    value.boolean = _SFCB_STRCASECMP(val.value, "false");
     if (value.boolean)
       value.boolean = 1;
     break;
