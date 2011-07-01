@@ -25,6 +25,7 @@
 
 #include "mlog.h"
 
+// Also in support.h
 #define _SFCB_STRCASECMP(a,b) (strcmp (a,b)) 
 
 #ifdef SFCB_DEBUG

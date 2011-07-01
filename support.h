@@ -41,6 +41,9 @@
 #include <dlfcn.h>
 #include <sfcCommon/utilft.h>
 
+//also in trace.h
+#define _SFCB_STRCASECMP(a,b) (strcmp (a,b)) 
+
 #define ENQ_BOT_LIST(i,f,l,n,p) { if (l) l->n=i; else f=i; \
                                   i->p=l; i->n=NULL; l=i;}
 #define ENQ_TOP_LIST(i,f,l,n,p) { if (f) f->p=i; else l=i; \
