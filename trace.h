@@ -25,6 +25,8 @@
 
 #include "mlog.h"
 
+#define _SFCB_STRCASECMP(a,b) (strcmp (a,b)) 
+
 #ifdef SFCB_DEBUG
 
 #define _SFCB_TRACE(LEVEL,STR) \
