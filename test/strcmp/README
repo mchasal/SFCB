@@ -1,0 +1,18 @@
+SETUP:
+    modify the _SFCB_STRCASECMP macro in trace.h and support.h to reflect what you want to test.
+    make install
+    start sfcbd
+    run ./mkhdlr.sh to create a bunch of handlers. (you can modify the loop for the amount)
+    stop sfcbd.
+
+
+TEST:
+    start sfcbd with callgrind and indProvider tracing
+        valgrind --tool=callgrind -v sfcbd -t512
+    Note the pid of indCIMXMLHandler
+    run wbemcat ./ei_hdlr.xml
+    stop sfcbd
+
+RESULTS:
+    run kcachegrind callgrind.out.<PID> with the pid from indCIMXMLHandler
+    profit
