@@ -35,7 +35,7 @@ handlerpost='</VALUE>
   </MESSAGE>
 </CIM>'
 
-for i in {0..10} 
+for i in {0..100} 
 do
     echo "$handlerpre$i$handlerpost" > /tmp/wbemcat.xml
     wbemcat /tmp/wbemcat.xml
