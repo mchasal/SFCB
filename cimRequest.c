@@ -1806,8 +1806,6 @@ handleCimRequest(CimRequestContext * ctx, int flags, char * more)
   }
 #endif
   _SFCB_ENTER(TRACE_CIMXMLPROC, "handleCimXmlRequest");
-//printf("MCS enter handle.. %s\n",more); // uncomment this, and it works
-//sleep(1); // or this
 
   /* Walk over known request scanners */
   int i=0;

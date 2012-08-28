@@ -1162,9 +1162,6 @@ doHttpRequest(CommHndl conn_fd)
 #endif
   }
 
-snprintf(more,256,"%s","MCS more");
-printf("MCS post auth done %s\n",more);
-
   len = inBuf.content_length;
   if (len == UINT_MAX) {
     if (!discardInput) {
@@ -1207,7 +1204,6 @@ printf("MCS post auth done %s\n",more);
     _SFCB_RETURN(discardInput - 1);
   }
 
-
   msgs[0].data = hdr;
   msgs[0].length = hl;
   msgs[1].data = inBuf.content;
@@ -1247,13 +1243,11 @@ printf("MCS post auth done %s\n",more);
                   _sfcb_format_trace("-#- xmlIn end\n"));
     }
 #endif
-printf("MCS pre handle cim %s\n",more);
 
     response = handleCimRequest(&ctx, hcrFlags, more);
   } else {
     response = nullResponse;
   }
-printf("MCS post handle cim \n");
   if (more) {
      free(more);
      more=NULL;
